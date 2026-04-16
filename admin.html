@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Admin | Blog Gabriel Silva</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <title>Admin Pro | Gabriel Silva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -14,307 +15,448 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #0a0a0f;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0d0d14 100%);
       color: #ecedee;
-      padding: 2rem 1rem;
+      min-height: 100vh;
     }
 
-    .admin-container {
-      max-width: 900px;
-      margin: 0 auto;
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a1a2a; }
+    ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
+
+    /* Sidebar Layout */
+    .admin-wrapper {
+      display: flex;
+      min-height: 100vh;
     }
 
-    /* header */
-    .admin-header {
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: #0d0d14;
+      border-right: 1px solid #2a2a35;
+      padding: 2rem 1.5rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #2a2a35;
+    }
+    .sidebar-logo-icon {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-logo-icon i { font-size: 1.5rem; color: white; }
+    .sidebar-logo-text h2 { font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, #c084fc, #a855f7); background-clip: text; -webkit-background-clip: text; color: transparent; }
+    .sidebar-logo-text p { font-size: 0.7rem; color: #8b8ca8; }
+
+    .sidebar-nav { margin-top: 1rem; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 1rem;
+      margin: 0.3rem 0;
+      border-radius: 12px;
+      color: #b8b9d6;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-item i { width: 24px; font-size: 1.1rem; }
+    .nav-item:hover, .nav-item.active {
+      background: #1e1e2a;
+      color: #c084fc;
+    }
+    .sidebar-footer {
+      position: absolute;
+      bottom: 2rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #2a2a35;
+      font-size: 0.75rem;
+      color: #6a6a80;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
       margin-bottom: 2rem;
-      background: #13131a;
-      padding: 1rem 2rem;
-      border-radius: 60px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      border: 1px solid #2a2a35;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #2a2a35;
     }
-    .admin-header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-    .back-link {
+    .page-title h1 { font-size: 1.8rem; font-weight: 700; }
+    .page-title p { color: #8b8ca8; font-size: 0.85rem; margin-top: 4px; }
+    .back-blog {
       background: #1e1e2a;
-      color: #c084fc;
-      text-decoration: none;
-      padding: 0.5rem 1.4rem;
+      padding: 0.6rem 1.2rem;
       border-radius: 40px;
-      font-weight: 500;
-      font-size: 0.9rem;
+      text-decoration: none;
+      color: #c084fc;
       transition: 0.2s;
-      border: 1px solid #2a2a35;
     }
-    .back-link:hover {
-      background: #2a2a35;
-      transform: translateY(-2px);
-      color: #e9d5ff;
-    }
+    .back-blog:hover { background: #2a2a35; transform: translateY(-2px); }
 
-    /* form card */
+    /* Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: #13131a;
+      border: 1px solid #2a2a35;
+      border-radius: 20px;
+      padding: 1.2rem;
+      transition: 0.2s;
+    }
+    .stat-card:hover { border-color: #7c3aed; transform: translateY(-3px); }
+    .stat-card i { font-size: 2rem; color: #7c3aed; margin-bottom: 0.5rem; }
+    .stat-card h3 { font-size: 1.8rem; font-weight: 700; }
+    .stat-card p { color: #8b8ca8; font-size: 0.8rem; }
+
+    /* Form Card */
     .form-card {
       background: #13131a;
-      border-radius: 32px;
-      padding: 2rem;
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
       border: 1px solid #2a2a35;
+      border-radius: 24px;
+      padding: 2rem;
       margin-bottom: 2rem;
     }
-    .form-group {
+    .form-card h2 {
+      font-size: 1.4rem;
       margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
+    .form-group { margin-bottom: 1.5rem; }
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
       color: #c084fc;
     }
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 0.9rem 1rem;
-      border: 1.5px solid #2a2a35;
-      border-radius: 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      transition: 0.2s;
       background: #0a0a0f;
+      border: 1.5px solid #2a2a35;
+      border-radius: 16px;
       color: #ecedee;
+      font-family: 'Inter', sans-serif;
+      transition: 0.2s;
     }
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: #7c3aed;
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
     }
-    input::placeholder, textarea::placeholder {
-      color: #5a5a70;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 180px;
-    }
-    .helper-text {
-      font-size: 0.75rem;
-      color: #7a7a8c;
-      margin-top: 6px;
-    }
+    textarea { resize: vertical; min-height: 150px; }
+    .helper-text { font-size: 0.7rem; color: #6a6a80; margin-top: 5px; }
+
     .video-preview {
-      margin-top: 0.8rem;
+      margin-top: 1rem;
       padding: 1rem;
       background: #0a0a0f;
-      border-radius: 20px;
-      border: 1px solid #2a2a35;
+      border-radius: 16px;
       display: none;
     }
-    .video-preview.active {
-      display: block;
-    }
+    .video-preview.active { display: block; }
     .video-preview iframe {
       width: 100%;
       max-width: 400px;
       height: 225px;
-      border-radius: 16px;
-      border: none;
+      border-radius: 12px;
     }
+
     .btn-submit {
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       color: white;
       border: none;
-      padding: 0.9rem 1.8rem;
-      font-size: 1rem;
-      font-weight: 600;
+      padding: 1rem;
+      width: 100%;
       border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
     }
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.4);
-      filter: brightness(1.05);
-    }
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    /* status message */
-    .status-msg {
-      margin-top: 1rem;
-      padding: 0.8rem 1rem;
-      border-radius: 28px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-align: center;
-    }
-    .success {
-      background: #0f2e1f;
-      color: #4ade80;
-      border-left: 4px solid #22c55e;
-    }
-    .error {
-      background: #2e1a1a;
-      color: #f87171;
-      border-left: 4px solid #ef4444;
-    }
-    .info {
-      background: #1e1a2f;
-      color: #c084fc;
-    }
-
-    /* posts preview section */
-    .recent-section {
+    /* Posts List Table */
+    .posts-list {
       background: #13131a;
-      border-radius: 32px;
-      padding: 1.5rem;
       border: 1px solid #2a2a35;
+      border-radius: 24px;
+      overflow: hidden;
     }
-    .recent-section h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      color: #ecedee;
-    }
-    .posts-mini-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .mini-post {
+    .posts-header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid #2a2a35;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #0a0a0f;
-      padding: 0.8rem 1rem;
-      border-radius: 20px;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .search-box input {
+      width: 250px;
+      padding: 0.6rem 1rem;
+    }
+    .search-box button {
+      background: #1e1e2a;
       border: 1px solid #2a2a35;
-      transition: 0.2s;
-    }
-    .mini-post:hover {
-      border-color: #7c3aed;
-    }
-    .mini-info {
-      flex: 1;
-    }
-    .mini-title {
-      font-weight: 600;
-      color: #ecedee;
-    }
-    .mini-date {
-      font-size: 0.7rem;
-      color: #9b8cbf;
-    }
-    .video-badge {
-      display: inline-block;
-      background: #7c3aed20;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
       color: #c084fc;
-      font-size: 0.65rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-left: 8px;
+      cursor: pointer;
     }
-    .delete-btn {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid #2a2a35;
+    }
+    th { color: #c084fc; font-weight: 600; }
+    tr:hover { background: #1a1a22; }
+    .post-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .status-published { background: #0f2e1f; color: #4ade80; }
+    .status-draft { background: #2e1a1a; color: #f87171; }
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .edit-btn, .delete-btn {
       background: none;
       border: none;
-      font-size: 1.3rem;
       cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 30px;
+      font-size: 1.1rem;
+      padding: 5px 8px;
+      border-radius: 8px;
       transition: 0.2s;
-      color: #a855f7;
     }
-    .delete-btn:hover {
-      background: #2e1a2e;
-      color: #f87171;
+    .edit-btn { color: #c084fc; }
+    .edit-btn:hover { background: #1e1e2a; color: #a855f7; }
+    .delete-btn { color: #f87171; }
+    .delete-btn:hover { background: #2e1a1a; color: #ef4444; }
+
+    .empty-state { text-align: center; padding: 3rem; color: #8b8ca8; }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
     }
-    .empty-list {
-      text-align: center;
-      color: #9b8cbf;
-      padding: 1rem;
+    .modal-content {
+      background: #13131a;
+      border: 1px solid #7c3aed;
+      border-radius: 24px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
     }
-    footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #6a6a80;
+    .modal-buttons { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
+    .modal-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
     }
-    @media (max-width: 600px) {
-      .admin-header { border-radius: 28px; padding: 1rem 1.5rem; }
-      .form-card { padding: 1.5rem; }
+    .modal-btn.confirm { background: #ef4444; color: white; }
+    .modal-btn.cancel { background: #2a2a35; color: #ecedee; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      background: #13131a;
+      border-left: 4px solid #4ade80;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .stats-grid { grid-template-columns: 1fr; }
+      table, thead, tbody, th, td, tr { display: block; }
+      th { display: none; }
+      td { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; }
+      td::before { content: attr(data-label); font-weight: 600; color: #c084fc; }
     }
   </style>
 </head>
 <body>
-<div class="admin-container">
-  <div class="admin-header">
-    <h1>🔐 Painel do Admin — Gabriel Silva</h1>
-    <a href="index.html" class="back-link">← Ver Blog</a>
-  </div>
-
-  <div class="form-card">
-    <h2 style="margin-bottom: 1.5rem; font-weight: 600; color: #ecedee;">✏️ Criar novo post</h2>
-    <form id="postForm">
-      <div class="form-group">
-        <label>Título do post *</label>
-        <input type="text" id="postTitle" placeholder="Ex: Minhas reflexões sobre criatividade..." required maxlength="120">
+<div class="admin-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="fas fa-crown"></i></div>
+      <div class="sidebar-logo-text">
+        <h2>Gabriel Silva</h2>
+        <p>Admin Dashboard</p>
       </div>
-      <div class="form-group">
-        <label>Conteúdo / Texto completo *</label>
-        <textarea id="postContent" placeholder="Escreva o conteúdo do artigo aqui..." required></textarea>
-        <div class="helper-text">A página inicial mostrará um resumo de até 280 caracteres.</div>
-      </div>
-      <div class="form-group">
-        <label>🎬 Link do YouTube (opcional)</label>
-        <input type="text" id="postVideo" placeholder="https://www.youtube.com/watch?v=SEU_VIDEO_ID ou https://youtu.be/SEU_VIDEO_ID">
-        <div class="helper-text">Cole qualquer link do YouTube. O vídeo será incorporado no post.</div>
-        <div id="videoPreviewContainer" class="video-preview"></div>
-      </div>
-      <div class="form-group">
-        <label>🖼️ URL da imagem de capa (opcional)</label>
-        <input type="text" id="postImage" placeholder="https://exemplo.com/imagem.jpg">
-        <div class="helper-text">Deixe vazio para usar uma imagem padrão. Se tiver vídeo, o vídeo terá destaque.</div>
-      </div>
-      <button type="submit" class="btn-submit" id="submitBtn">📤 Publicar post</button>
-      <div id="formStatus"></div>
-    </form>
-  </div>
-
-  <div class="recent-section">
-    <h2>📋 Últimos posts publicados</h2>
-    <div id="recentPostsList" class="posts-mini-list">
-      <div class="info" style="padding: 1rem; text-align:center;">Carregando posts...</div>
     </div>
-  </div>
-  <footer>
-    <p>⚡ Admin seguro via Firebase Realtime Database | Suporte a vídeos do YouTube</p>
-  </footer>
+    <div class="sidebar-nav">
+      <div class="nav-item active" data-tab="create">
+        <i class="fas fa-pen-fancy"></i> <span>Criar Post</span>
+      </div>
+      <div class="nav-item" data-tab="manage">
+        <i class="fas fa-list-ul"></i> <span>Gerenciar Posts</span>
+      </div>
+      <div class="nav-item" data-tab="stats">
+        <i class="fas fa-chart-line"></i> <span>Estatísticas</span>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <i class="fas fa-shield-alt"></i> Painel Protegido
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <p>Gerencie seu blog com estilo</p>
+      </div>
+      <a href="index.html" class="back-blog"><i class="fas fa-arrow-left"></i> Ver Blog</a>
+    </div>
+
+    <!-- Tab: Create Post -->
+    <div id="createTab" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card"><i class="fas fa-newspaper"></i><h3 id="totalPosts">0</h3><p>Total de Posts</p></div>
+        <div class="stat-card"><i class="fas fa-video"></i><h3 id="videoPosts">0</h3><p>Posts com Vídeo</p></div>
+        <div class="stat-card"><i class="fas fa-calendar-week"></i><h3 id="monthPosts">0</h3><p>Este Mês</p></div>
+      </div>
+
+      <div class="form-card">
+        <h2><i class="fas fa-feather-alt"></i> Criar Nova Publicação</h2>
+        <form id="postForm">
+          <div class="form-group">
+            <label><i class="fas fa-heading"></i> Título *</label>
+            <input type="text" id="postTitle" placeholder="Digite um título impactante..." required maxlength="120">
+            <div class="helper-text"><span id="titleCount">0</span>/120 caracteres</div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-align-left"></i> Conteúdo *</label>
+            <textarea id="postContent" placeholder="Escreva seu artigo aqui..."></textarea>
+            <div class="helper-text"><span id="contentCount">0</span> caracteres</div>
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-youtube"></i> Link do YouTube</label>
+            <input type="text" id="postVideo" placeholder="https://youtube.com/watch?v=...">
+            <div id="videoPreviewContainer" class="video-preview"></div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-image"></i> URL da Imagem de Capa</label>
+            <input type="text" id="postImage" placeholder="https://exemplo.com/imagem.jpg">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-tag"></i> Categoria</label>
+            <select id="postCategory">
+              <option value="Tecnologia">🚀 Tecnologia</option>
+              <option value="Criatividade">🎨 Criatividade</option>
+              <option value="Desenvolvimento">💻 Desenvolvimento</option>
+              <option value="Carreira">📈 Carreira</option>
+              <option value="Outros">📌 Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-toggle-on"></i> Status</label>
+            <select id="postStatus">
+              <option value="published">📢 Publicado</option>
+              <option value="draft">✏️ Rascunho</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Publicar Post</button>
+          <div id="formStatus"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tab: Manage Posts -->
+    <div id="manageTab" class="tab-content" style="display: none;">
+      <div class="posts-list">
+        <div class="posts-header">
+          <h3><i class="fas fa-database"></i> Todos os Posts</h3>
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar por título...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+        <div id="postsTableContainer">
+          <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Statistics -->
+    <div id="statsTab" class="tab-content" style="display: none;">
+      <div class="stats-grid">
+        <div class="stat-card"><i class="fas fa-words"></i><h3 id="totalWords">0</h3><p>Total de Palavras</p></div>
+        <div class="stat-card"><i class="fas fa-clock"></i><h3 id="avgReadTime">0</h3><p>Tempo Médio de Leitura</p></div>
+        <div class="stat-card"><i class="fas fa-calendar-alt"></i><h3 id="oldestPost">-</h3><p>Post mais antigo</p></div>
+      </div>
+      <div class="form-card">
+        <h2><i class="fas fa-chart-simple"></i> Análise de Conteúdo</h2>
+        <div id="statsContent" style="color: #b8b9d6; line-height: 1.8;"></div>
+      </div>
+    </div>
+  </main>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-
 <script>
-  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
     authDomain: "fire-auth-2ca37.firebaseapp.com",
@@ -325,252 +467,89 @@
     appId: "1:1047158509788:web:058bb4376a4f14ef3ee419",
     measurementId: "G-520K5H9Z1T"
   };
-
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
   const postsRef = database.ref('blog_posts');
 
-  // DOM elements
-  const form = document.getElementById('postForm');
-  const titleInput = document.getElementById('postTitle');
-  const contentInput = document.getElementById('postContent');
-  const videoInput = document.getElementById('postVideo');
-  const imageInput = document.getElementById('postImage');
-  const submitBtn = document.getElementById('submitBtn');
-  const formStatusDiv = document.getElementById('formStatus');
-  const recentContainer = document.getElementById('recentPostsList');
-  const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+  let allPosts = [];
+  let deleteId = null;
 
-  // Função para extrair ID do YouTube de qualquer formato de URL
-  function extractYouTubeId(url) {
-    if (!url || url.trim() === '') return null;
-    
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=)([^&]+)/i,
-      /(?:youtube\.com\/embed\/)([^?]+)/i,
-      /(?:youtu\.be\/)([^?]+)/i,
-      /(?:youtube\.com\/shorts\/)([^?]+)/i,
-      /(?:youtube\.com\/v\/)([^?]+)/i
-    ];
-    
-    for (const pattern of patterns) {
-      const match = url.match(pattern);
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-    return null;
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+  function extractYouTubeId(url) { if(!url) return null; const patterns = [/(?:youtube\.com\/watch\?v=)([^&]+)/i, /(?:youtu\.be\/)([^?]+)/i, /(?:youtube\.com\/embed\/)([^?]+)/i]; for(let p of patterns) { let m = url.match(p); if(m && m[1]) return m[1]; } return null; }
+
+  function showToast(msg, isError = false) {
+    let toast = document.createElement('div'); toast.className = 'toast'; toast.style.borderLeftColor = isError ? '#ef4444' : '#4ade80'; toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+    document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000);
   }
 
-  // Função para gerar embed URL
-  function getYouTubeEmbedUrl(url) {
-    const videoId = extractYouTubeId(url);
-    if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    return null;
+  function updateStats() {
+    document.getElementById('totalPosts').innerText = allPosts.length;
+    document.getElementById('videoPosts').innerText = allPosts.filter(p => p.videoUrl && p.videoUrl.trim()).length;
+    let now = new Date(), thisMonth = now.getMonth(), thisYear = now.getFullYear();
+    let monthCount = allPosts.filter(p => { let d = new Date(p.createdAt); return d.getMonth() === thisMonth && d.getFullYear() === thisYear; }).length;
+    document.getElementById('monthPosts').innerText = monthCount;
+    let totalWords = allPosts.reduce((sum, p) => sum + (p.content?.split(/\s+/)?.length || 0), 0);
+    document.getElementById('totalWords').innerText = totalWords;
+    let avgRead = allPosts.length ? Math.round(totalWords / allPosts.length / 200) : 0;
+    document.getElementById('avgReadTime').innerText = avgRead + ' min';
+    let oldest = allPosts.length ? new Date(Math.min(...allPosts.map(p => p.createdAt || 0))).toLocaleDateString('pt-BR') : '-';
+    document.getElementById('oldestPost').innerText = oldest;
+    let cats = {}; allPosts.forEach(p => { let c = p.category || 'Outros'; cats[c] = (cats[c] || 0) + 1; });
+    document.getElementById('statsContent').innerHTML = `<strong>📊 Distribuição por Categoria:</strong><br>${Object.entries(cats).map(([k,v]) => `• ${k}: ${v} post(s)`).join('<br>')}<br><br><strong>📝 Dica:</strong> Continue criando conteúdo de qualidade!`;
   }
 
-  // Preview do vídeo enquanto digita
-  function updateVideoPreview() {
-    const videoUrl = videoInput.value.trim();
-    const embedUrl = getYouTubeEmbedUrl(videoUrl);
-    
-    if (embedUrl) {
-      videoPreviewContainer.innerHTML = `
-        <div style="margin-bottom: 8px; font-size: 0.8rem; color: #c084fc;">🎬 Pré-visualização:</div>
-        <iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="helper-text" style="margin-top: 6px;">✓ Vídeo detectado! Será incorporado no post.</div>
-      `;
-      videoPreviewContainer.classList.add('active');
-    } else if (videoUrl !== '') {
-      videoPreviewContainer.innerHTML = `
-        <div style="color: #f87171; font-size: 0.8rem;">⚠️ Link do YouTube inválido. Use formatos como: https://youtu.be/... ou https://www.youtube.com/watch?v=...</div>
-      `;
-      videoPreviewContainer.classList.add('active');
-    } else {
-      videoPreviewContainer.classList.remove('active');
-      videoPreviewContainer.innerHTML = '';
-    }
-  }
-
-  videoInput.addEventListener('input', updateVideoPreview);
-
-  // Helper: escape HTML
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
+  function renderManageTable(filter = '') {
+    let filtered = allPosts.filter(p => p.title?.toLowerCase().includes(filter.toLowerCase()));
+    let container = document.getElementById('postsTableContainer');
+    if(!filtered.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><br>Nenhum post encontrado</div>'; return; }
+    let html = `<table><thead><tr><th>Título</th><th>Data</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead><tbody>`;
+    filtered.forEach(post => {
+      let date = post.dateFormatted || new Date(post.createdAt).toLocaleDateString('pt-BR');
+      let statusClass = (post.status || 'published') === 'published' ? 'status-published' : 'status-draft';
+      let statusText = (post.status || 'published') === 'published' ? 'Publicado' : 'Rascunho';
+      html += `<tr>
+        <td data-label="Título">${escapeHtml(post.title?.substring(0, 50))}${post.title?.length > 50 ? '…' : ''}</td>
+        <td data-label="Data">${escapeHtml(date)}</td>
+        <td data-label="Categoria">${escapeHtml(post.category || 'Outros')}</td>
+        <td data-label="Status"><span class="post-status ${statusClass}">${statusText}</span></td>
+        <td data-label="Ações"><div class="action-buttons"><button class="edit-btn" data-id="${post.id}"><i class="fas fa-edit"></i></button><button class="delete-btn" data-id="${post.id}"><i class="fas fa-trash"></i></button></div></td>
+      </tr>`;
     });
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.getAttribute('data-id'); editPost(id); }));
+    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.getAttribute('data-id'); confirmDelete(id); }));
   }
 
-  // Mostrar mensagem de status
-  function showMessage(message, type) {
-    formStatusDiv.innerHTML = `<div class="status-msg ${type}">${message}</div>`;
-    setTimeout(() => {
-      if (formStatusDiv.innerHTML.includes(message)) {
-        if (formStatusDiv.firstChild && formStatusDiv.firstChild.innerText === message) {
-          formStatusDiv.innerHTML = '';
-        }
-      }
-    }, 4000);
+  function editPost(id) { let post = allPosts.find(p => p.id === id); if(post) { document.getElementById('postTitle').value = post.title || ''; document.getElementById('postContent').value = post.content || ''; document.getElementById('postVideo').value = post.videoUrl || ''; document.getElementById('postImage').value = post.imageUrl || ''; document.getElementById('postCategory').value = post.category || 'Tecnologia'; document.getElementById('postStatus').value = post.status || 'published'; document.querySelector('.nav-item[data-tab="create"]').click(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('✏️ Editando post: ' + post.title); deleteId = id; } }
+
+  function confirmDelete(id) { deleteId = id; let modal = document.createElement('div'); modal.className = 'modal'; modal.innerHTML = `<div class="modal-content"><h3><i class="fas fa-exclamation-triangle"></i> Confirmar exclusão</h3><p>Tem certeza que deseja excluir este post? Esta ação é irreversível.</p><div class="modal-buttons"><button class="modal-btn cancel">Cancelar</button><button class="modal-btn confirm">Excluir</button></div></div>`; document.body.appendChild(modal); modal.querySelector('.cancel').onclick = () => modal.remove(); modal.querySelector('.confirm').onclick = async () => { await postsRef.child(id).remove(); loadAllData(); modal.remove(); showToast('✅ Post excluído com sucesso!'); deleteId = null; }; }
+
+  async function loadAllData() {
+    let snap = await postsRef.once('value'); let data = snap.val();
+    allPosts = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })).sort((a,b) => (b.createdAt||0)-(a.createdAt||0)) : [];
+    updateStats(); renderManageTable(document.getElementById('searchInput')?.value || '');
   }
 
-  // Carregar lista de posts recentes
-  function loadRecentPosts() {
-    postsRef.orderByChild('createdAt').once('value', (snapshot) => {
-      const postsData = snapshot.val();
-      recentContainer.innerHTML = '';
+  document.getElementById('postTitle')?.addEventListener('input', (e) => document.getElementById('titleCount').innerText = e.target.value.length);
+  document.getElementById('postContent')?.addEventListener('input', (e) => document.getElementById('contentCount').innerText = e.target.value.length);
+  document.getElementById('postVideo')?.addEventListener('input', function() { let vid = extractYouTubeId(this.value); let preview = document.getElementById('videoPreviewContainer'); if(vid) { preview.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}" frameborder="0" allowfullscreen></iframe><div class="helper-text">✓ Vídeo detectado!</div>`; preview.classList.add('active'); } else { preview.classList.remove('active'); preview.innerHTML = ''; } });
 
-      if (!postsData) {
-        recentContainer.innerHTML = '<div class="empty-list">✨ Nenhum post encontrado. Crie o primeiro!</div>';
-        return;
-      }
-
-      let postsArray = Object.keys(postsData).map(key => ({
-        id: key,
-        ...postsData[key]
-      })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-      const recentPosts = postsArray.slice(0, 6);
-      if (recentPosts.length === 0) {
-        recentContainer.innerHTML = '<div class="empty-list">📭 Nenhum post disponível</div>';
-        return;
-      }
-
-      for (let post of recentPosts) {
-        const postDate = post.dateFormatted || (post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-BR') : 'Data desconhecida');
-        const hasVideo = post.videoUrl && post.videoUrl.trim() !== '';
-        const miniDiv = document.createElement('div');
-        miniDiv.className = 'mini-post';
-        miniDiv.innerHTML = `
-          <div class="mini-info">
-            <div class="mini-title">
-              ${escapeHtml(post.title.substring(0, 55))}${post.title.length > 55 ? '…' : ''}
-              ${hasVideo ? '<span class="video-badge">🎬 Vídeo</span>' : ''}
-            </div>
-            <div class="mini-date">📅 ${escapeHtml(postDate)}</div>
-          </div>
-          <button class="delete-btn" data-id="${post.id}" title="Excluir post">🗑️</button>
-        `;
-        recentContainer.appendChild(miniDiv);
-      }
-
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          e.stopPropagation();
-          const postId = btn.getAttribute('data-id');
-          if (confirm('⚠️ Tem certeza que deseja excluir este post permanentemente?')) {
-            await deletePostById(postId);
-          }
-        });
-      });
-    }).catch(err => {
-      console.error("Erro ao carregar recentes:", err);
-      recentContainer.innerHTML = `<div class="empty-list">⚠️ Erro ao carregar lista: ${err.message}</div>`;
-    });
-  }
-
-  // Deletar post
-  async function deletePostById(postId) {
-    if (!postId) return;
-    try {
-      await postsRef.child(postId).remove();
-      showMessage('✅ Post excluído com sucesso!', 'success');
-      loadRecentPosts();
-    } catch (error) {
-      console.error("Erro ao deletar:", error);
-      showMessage(`❌ Erro ao excluir: ${error.message}`, 'error');
-    }
-  }
-
-  // Criar novo post com suporte a vídeo
-  async function createNewPost(event) {
-    event.preventDefault();
-
-    const title = titleInput.value.trim();
-    const content = contentInput.value.trim();
-    const videoUrl = videoInput.value.trim();
-    const imageUrl = imageInput.value.trim();
-
-    if (!title || !content) {
-      showMessage('❌ Preencha o título e o conteúdo do post.', 'error');
-      return;
-    }
-
-    if (title.length > 120) {
-      showMessage('Título muito longo (máx 120 caracteres).', 'error');
-      return;
-    }
-
-    // Validar e processar vídeo
-    let validVideoUrl = '';
-    let videoEmbedUrl = '';
-    if (videoUrl) {
-      const videoId = extractYouTubeId(videoUrl);
-      if (videoId) {
-        validVideoUrl = videoUrl;
-        videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
-      } else {
-        showMessage('⚠️ Link do YouTube inválido. O post será criado sem vídeo.', 'error');
-      }
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = '🔄 Publicando...';
-
-    const nowTimestamp = Date.now();
-    const formattedDate = new Date(nowTimestamp).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
-
-    const newPost = {
-      title: title,
-      content: content,
-      imageUrl: imageUrl || '',
-      videoUrl: validVideoUrl || '',
-      videoEmbedUrl: videoEmbedUrl || '',
-      createdAt: nowTimestamp,
-      dateFormatted: formattedDate,
-    };
-
-    try {
-      await postsRef.push(newPost);
-      titleInput.value = '';
-      contentInput.value = '';
-      videoInput.value = '';
-      imageInput.value = '';
-      videoPreviewContainer.classList.remove('active');
-      videoPreviewContainer.innerHTML = '';
-      showMessage('🎉 Post publicado com sucesso! Vídeo incorporado (se fornecido).', 'success');
-      loadRecentPosts();
-    } catch (error) {
-      console.error("Erro ao salvar post:", error);
-      showMessage(`🔥 Erro ao publicar: ${error.message}`, 'error');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = '📤 Publicar post';
-    }
-  }
-
-  form.addEventListener('submit', createNewPost);
-  loadRecentPosts();
-
-  // Verificar conectividade
-  window.addEventListener('load', () => {
-    const connectedRef = database.ref('.info/connected');
-    connectedRef.on('value', (snap) => {
-      if (snap.val() === true) {
-        console.log("Firebase conectado");
-      }
-    });
+  document.getElementById('postForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault(); let btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    let title = document.getElementById('postTitle').value.trim(), content = document.getElementById('postContent').value.trim(), videoUrl = document.getElementById('postVideo').value.trim(), imageUrl = document.getElementById('postImage').value.trim(), category = document.getElementById('postCategory').value, status = document.getElementById('postStatus').value;
+    if(!title || !content) { showToast('Preencha título e conteúdo!', true); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar Post'; return; }
+    let videoEmbedUrl = '', validVideoUrl = ''; let vid = extractYouTubeId(videoUrl); if(vid) { validVideoUrl = videoUrl; videoEmbedUrl = `https://www.youtube.com/embed/${vid}`; }
+    let now = Date.now(); let postData = { title, content, videoUrl: validVideoUrl, videoEmbedUrl, imageUrl, category, status, createdAt: now, dateFormatted: new Date(now).toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' }) };
+    if(deleteId) { await postsRef.child(deleteId).update(postData); showToast('✏️ Post atualizado com sucesso!'); deleteId = null; } else { await postsRef.push(postData); showToast('🎉 Novo post publicado!'); }
+    document.getElementById('postForm').reset(); document.getElementById('videoPreviewContainer').classList.remove('active'); document.getElementById('titleCount').innerText = '0'; document.getElementById('contentCount').innerText = '0';
+    await loadAllData(); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar Post';
   });
+
+  document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); item.classList.add('active'); let tab = item.getAttribute('data-tab'); document.getElementById('createTab').style.display = tab === 'create' ? 'block' : 'none'; document.getElementById('manageTab').style.display = tab === 'manage' ? 'block' : 'none'; document.getElementById('statsTab').style.display = tab === 'stats' ? 'block' : 'none'; if(tab === 'manage') renderManageTable(document.getElementById('searchInput')?.value || ''); }); });
+  document.getElementById('searchBtn')?.addEventListener('click', () => renderManageTable(document.getElementById('searchInput')?.value || ''));
+  document.getElementById('searchInput')?.addEventListener('keyup', (e) => { if(e.key === 'Enter') renderManageTable(e.target.value); });
+  loadAllData();
 </script>
 </body>
 </html>
