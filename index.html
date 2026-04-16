@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Blog Gabriel Silva | Início</title>
+  <!-- Google Fonts & simple CSS reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #faf9fc;
+      color: #1e1a2f;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* header */
+    .blog-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      border-bottom: 2px solid #e9e6f2;
+      padding-bottom: 1.5rem;
+    }
+    .blog-header h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2b1e4e, #5a3e8c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .blog-header p {
+      color: #5b4b7a;
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .admin-link {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #2b1e4e;
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .admin-link:hover {
+      background: #1f153b;
+      transform: translateY(-2px);
+    }
+
+    /* posts grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    .post-card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.02);
+      overflow: hidden;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #edeaf5;
+    }
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 36px -12px rgba(43,30,78,0.2);
+    }
+    .post-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #e9e4f4;
+      display: block;
+    }
+    .post-content {
+      padding: 1.6rem;
+      flex: 1;
+    }
+    .post-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #1e1a2f;
+      line-height: 1.3;
+    }
+    .post-date {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #7b6b9e;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .post-summary {
+      color: #2f2a44;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .no-posts {
+      text-align: center;
+      padding: 3rem;
+      background: #f3f0fa;
+      border-radius: 2rem;
+      color: #5f4b8b;
+      font-weight: 500;
+    }
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      border-top: 1px solid #e3deef;
+      padding-top: 2rem;
+      color: #6a5a86;
+      font-size: 0.85rem;
+    }
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      font-weight: 500;
+      color: #4b3b6e;
+    }
+    @media (max-width: 640px) {
+      .container { padding: 1.5rem; }
+      .post-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="blog-header">
+    <h1>📖 Blog Gabriel Silva</h1>
+    <p>Ideias, tecnologia e criatividade — direto da fonte.</p>
+    <a href="admin.html" class="admin-link">✍️ Área do Admin (Criar Post)</a>
+  </div>
+
+  <main>
+    <div id="postsContainer" class="posts-grid">
+      <div class="loading">📡 Carregando artigos...</div>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 Blog Gabriel Silva — Todos os direitos reservados.</p>
+  </footer>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script>
+  // Firebase configuration (provided by user)
+  const firebaseConfig = {
+    apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
+    authDomain: "fire-auth-2ca37.firebaseapp.com",
+    databaseURL: "https://fire-auth-2ca37-default-rtdb.firebaseio.com",
+    projectId: "fire-auth-2ca37",
+    storageBucket: "fire-auth-2ca37.firebasestorage.app",
+    messagingSenderId: "1047158509788",
+    appId: "1:1047158509788:web:058bb4376a4f14ef3ee419",
+    measurementId: "G-520K5H9Z1T"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  const postsRef = database.ref('blog_posts'); // reference to store posts
+
+  // Load and display posts (ordered by date descending)
+  function loadPosts() {
+    const container = document.getElementById('postsContainer');
+    container.innerHTML = '<div class="loading">📚 Buscando publicações...</div>';
+
+    postsRef.orderByChild('createdAt').once('value', (snapshot) => {
+      const postsData = snapshot.val();
+      container.innerHTML = '';
+
+      if (!postsData) {
+        container.innerHTML = '<div class="no-posts">✨ Nenhum post publicado ainda. Volte em breve!</div>';
+        return;
+      }
+
+      // Convert object to array and sort by timestamp desc (newest first)
+      const postsArray = Object.keys(postsData).map(key => ({
+        id: key,
+        ...postsData[key]
+      })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      for (const post of postsArray) {
+        const card = document.createElement('article');
+        card.className = 'post-card';
+
+        // image handling: if no image, placeholder with gradient
+        const imageUrl = post.imageUrl && post.imageUrl.trim() !== "" 
+          ? post.imageUrl 
+          : "https://placehold.co/600x400/edeaf5/2b1e4e?text=Blog+Gabriel+Silva";
+
+        const postDate = post.dateFormatted || new Date(post.createdAt).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: 'long', year: 'numeric'
+        });
+
+        card.innerHTML = `
+          <img class="post-image" src="${imageUrl}" alt="capa do post: ${escapeHtml(post.title)}" onerror="this.src='https://placehold.co/600x400/2b1e4e/white?text=Imagem+indisponível'">
+          <div class="post-content">
+            <h2 class="post-title">${escapeHtml(post.title)}</h2>
+            <div class="post-date">
+              <span>📅</span> ${escapeHtml(postDate)}
+            </div>
+            <p class="post-summary">${escapeHtml(post.content.substring(0, 280))}${post.content.length > 280 ? '...' : ''}</p>
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    }).catch(error => {
+      console.error("Erro ao carregar posts:", error);
+      container.innerHTML = `<div class="no-posts">⚠️ Erro ao carregar posts. Verifique conexão com Firebase. <br> <small>${error.message}</small></div>`;
+    });
+  }
+
+  // simple helper to avoid XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // initial load
+  loadPosts();
+</script>
+</body>
+</html>
