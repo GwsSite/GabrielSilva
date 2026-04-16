@@ -28,7 +28,6 @@
       position: relative;
     }
 
-    /* Animated background */
     .bg-shapes {
       position: fixed;
       top: 0;
@@ -53,7 +52,6 @@
       50% { transform: translate(25px, -20px) scale(1.08); opacity: 0.8; }
     }
 
-    /* Main Card */
     .auth-container {
       position: relative;
       z-index: 10;
@@ -65,13 +63,8 @@
       padding: 2rem;
       border: 1px solid rgba(124, 58, 237, 0.35);
       box-shadow: 0 30px 55px -15px rgba(0, 0, 0, 0.6);
-      transition: transform 0.2s;
-    }
-    .auth-container:hover {
-      border-color: rgba(124, 58, 237, 0.6);
     }
 
-    /* Header */
     .auth-header {
       text-align: center;
       margin-bottom: 2rem;
@@ -98,7 +91,6 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.3px;
     }
     .auth-header p {
       color: #9b8cbf;
@@ -106,7 +98,6 @@
       margin-top: 0.5rem;
     }
 
-    /* Tabs */
     .tabs {
       display: flex;
       gap: 0.8rem;
@@ -134,7 +125,6 @@
       box-shadow: 0 6px 14px rgba(124, 58, 237, 0.35);
     }
 
-    /* Forms */
     .form {
       display: none;
       flex-direction: column;
@@ -153,7 +143,6 @@
       transform: translateY(-50%);
       color: #a855f7;
       font-size: 1rem;
-      transition: 0.2s;
     }
     input {
       width: 100%;
@@ -174,21 +163,18 @@
     }
     input::placeholder {
       color: #5e5e78;
-      font-weight: 400;
     }
 
-    /* reCAPTCHA */
     .captcha-container {
       display: flex;
       justify-content: center;
-      margin: 0.3rem 0 0.2rem;
-      transform: scale(0.95);
+      margin: 0.3rem 0;
     }
     .g-recaptcha {
+      transform: scale(0.95);
       transform-origin: center;
     }
 
-    /* Submit Button */
     .submit-btn {
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       border: none;
@@ -204,21 +190,17 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      letter-spacing: 0.3px;
     }
     .submit-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 12px 28px -6px rgba(124, 58, 237, 0.55);
-      filter: brightness(1.02);
     }
     .submit-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
     }
 
-    /* Messages */
     .message {
       padding: 0.8rem;
       border-radius: 28px;
@@ -256,12 +238,10 @@
 
     @media (max-width: 540px) {
       body { padding: 1rem; }
-      .auth-container { padding: 1.5rem; margin: 0.5rem; }
+      .auth-container { padding: 1.5rem; }
       .captcha-container { transform: scale(0.82); }
-      .tab-btn { font-size: 0.85rem; }
     }
   </style>
-  <!-- Google reCAPTCHA v2 -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
@@ -280,13 +260,11 @@
     <p>Explore todo o conteúdo com segurança</p>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="login">🔐 Acessar conta</button>
     <button class="tab-btn" data-tab="register">✨ Criar conta</button>
   </div>
 
-  <!-- Login Form -->
   <form id="loginForm" class="form active">
     <div class="input-group">
       <i class="fas fa-envelope"></i>
@@ -303,7 +281,6 @@
     <div id="loginMessage" class="message"></div>
   </form>
 
-  <!-- Register Form -->
   <form id="registerForm" class="form">
     <div class="input-group">
       <i class="fas fa-user-astronaut"></i>
@@ -334,15 +311,15 @@
 </div>
 
 <script>
-  // ==================== SCrypt Configuration (mesmo hash_config) ====================
+  // SCrypt Configuration
   const SCRYPT_CONFIG = {
-    algorithm: "SCRYPT",
-    base64_signer_key: "2h2oi0hct4qgu1elOGE94ptKSc17Zey/oX3ejFT31Sbp/mh8K89Vo58/yk2WoQWi2TcpuReZPZ9XnCKi6gsY3w==",
-    base64_salt_separator: "Bw==",
-    rounds: 8,
-    mem_cost: 14
+    N: Math.pow(2, 14), // 16384 (2^14)
+    r: 8,
+    p: 1,
+    dkLen: 32
   };
 
+  // Helper functions
   function base64ToBytes(base64) {
     const binary = atob(base64);
     const bytes = new Uint8Array(binary.length);
@@ -350,8 +327,11 @@
     return bytes;
   }
 
-  const signerKey = base64ToBytes(SCRYPT_CONFIG.base64_signer_key);
-  const saltSeparator = base64ToBytes(SCRYPT_CONFIG.base64_salt_separator);
+  function bytesToBase64(bytes) {
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
 
   function generateSalt() {
     const salt = new Uint8Array(16);
@@ -359,24 +339,24 @@
     return salt;
   }
 
+  // Hash password with SCrypt - VERSÃO CORRIGIDA
   async function hashPassword(password, salt) {
     const passwordBytes = new TextEncoder().encode(password);
-    const fullSalt = new Uint8Array(salt.length + saltSeparator.length);
-    fullSalt.set(salt);
-    fullSalt.set(saltSeparator, salt.length);
+    
     return new Promise((resolve, reject) => {
       scrypt(
         passwordBytes,
-        fullSalt,
-        Math.pow(2, SCRYPT_CONFIG.mem_cost),
-        SCRYPT_CONFIG.rounds,
-        1,
-        32,
+        salt,
+        SCRYPT_CONFIG.N,
+        SCRYPT_CONFIG.r,
+        SCRYPT_CONFIG.p,
+        SCRYPT_CONFIG.dkLen,
         (error, progress, key) => {
-          if (error) reject(error);
-          else if (key) {
-            const saltB64 = btoa(String.fromCharCode(...salt));
-            const hashB64 = btoa(String.fromCharCode(...key));
+          if (error) {
+            reject(error);
+          } else if (key) {
+            const saltB64 = bytesToBase64(salt);
+            const hashB64 = bytesToBase64(key);
             resolve(`${saltB64}:${hashB64}`);
           }
         }
@@ -392,16 +372,30 @@
     return storedHashB64 === computedHashB64;
   }
 
-  // User DB (localStorage)
-  function getUsers() { return JSON.parse(localStorage.getItem('blog_users_scrypt') || '[]'); }
-  function saveUsers(users) { localStorage.setItem('blog_users_scrypt', JSON.stringify(users)); }
+  // User database
+  function getUsers() { 
+    const users = localStorage.getItem('blog_users_scrypt_v2');
+    return users ? JSON.parse(users) : [];
+  }
+  
+  function saveUsers(users) { 
+    localStorage.setItem('blog_users_scrypt_v2', JSON.stringify(users));
+  }
 
   async function registerUser(name, email, password) {
     const users = getUsers();
     if (users.some(u => u.email === email)) return false;
+    
     const salt = generateSalt();
     const passwordHash = await hashPassword(password, salt);
-    users.push({ name, email, passwordHash, provider: 'email', createdAt: new Date().toISOString() });
+    
+    users.push({ 
+      name, 
+      email, 
+      passwordHash,
+      provider: 'email',
+      createdAt: new Date().toISOString()
+    });
     saveUsers(users);
     return true;
   }
@@ -410,22 +404,35 @@
     const users = getUsers();
     const user = users.find(u => u.email === email && u.provider === 'email');
     if (!user) return null;
-    const ok = await verifyPassword(password, user.passwordHash);
-    return ok ? user : null;
+    
+    const isValid = await verifyPassword(password, user.passwordHash);
+    return isValid ? user : null;
   }
 
   function redirectToBlog() {
-    setTimeout(() => { window.location.href = "https://gwssite.github.io/GabrielSilva/"; }, 900);
+    setTimeout(() => { 
+      window.location.href = "https://gwssite.github.io/GabrielSilva/"; 
+    }, 900);
   }
+  
   function loginSuccess(name, email) {
     sessionStorage.setItem('blog_logged_user', JSON.stringify({ name, email }));
     redirectToBlog();
   }
 
   // reCAPTCHA state
-  let captchaLogin = false, captchaRegister = false;
-  window.onCaptchaLoginSuccess = () => { captchaLogin = true; document.getElementById('loginBtn').disabled = false; };
-  window.onCaptchaRegisterSuccess = () => { captchaRegister = true; document.getElementById('registerBtn').disabled = false; };
+  let captchaLogin = false;
+  let captchaRegister = false;
+  
+  window.onCaptchaLoginSuccess = () => { 
+    captchaLogin = true; 
+    document.getElementById('loginBtn').disabled = false; 
+  };
+  
+  window.onCaptchaRegisterSuccess = () => { 
+    captchaRegister = true; 
+    document.getElementById('registerBtn').disabled = false; 
+  };
 
   function resetCaptcha(tab) {
     if (tab === 'login') {
@@ -450,8 +457,10 @@
     if (!el) return;
     el.textContent = msg;
     el.className = `message ${type}`;
-    setTimeout(() => { if (el) el.style.display = 'none'; }, 4200);
     el.style.display = 'block';
+    setTimeout(() => { 
+      if (el) el.style.display = 'none'; 
+    }, 4000);
   }
 
   // Login handler
@@ -459,9 +468,18 @@
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    if (!email || !password) return showMessage('loginMessage', '❌ Preencha e-mail e senha.', 'error');
-    if (!captchaLogin) return showMessage('loginMessage', '🤖 Complete o reCAPTCHA primeiro.', 'error');
+    
+    if (!email || !password) {
+      showMessage('loginMessage', '❌ Preencha e-mail e senha.', 'error');
+      return;
+    }
+    if (!captchaLogin) {
+      showMessage('loginMessage', '🤖 Complete o reCAPTCHA primeiro.', 'error');
+      return;
+    }
+    
     showMessage('loginMessage', '⏳ Verificando credenciais...', 'success');
+    
     try {
       const user = await authenticateUser(email, password);
       if (user) {
@@ -470,46 +488,82 @@
       } else {
         showMessage('loginMessage', '❌ E-mail ou senha incorretos.', 'error');
         captchaLogin = false;
-        if (window.grecaptcha) window.grecaptcha.reset();
+        if (window.grecaptcha) {
+          const el = document.querySelector('#loginForm .g-recaptcha');
+          if (el) window.grecaptcha.reset();
+        }
         document.getElementById('loginBtn').disabled = true;
       }
-    } catch (err) { console.error(err); showMessage('loginMessage', '❌ Erro interno. Tente novamente.', 'error'); }
+    } catch (err) { 
+      console.error(err); 
+      showMessage('loginMessage', '❌ Erro interno. Tente novamente.', 'error');
+    }
   }
 
-  // Register handler
+  // Register handler - CORRIGIDO
   async function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const pwd = document.getElementById('regPassword').value;
     const confirm = document.getElementById('regConfirmPassword').value;
-    if (!name || !email || !pwd || !confirm) return showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
-    if (pwd.length < 6) return showMessage('registerMessage', '⚠️ A senha precisa ter pelo menos 6 caracteres.', 'error');
-    if (pwd !== confirm) return showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
-    if (!captchaRegister) return showMessage('registerMessage', '🤖 Complete o reCAPTCHA.', 'error');
+    
+    if (!name || !email || !pwd || !confirm) {
+      showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
+      return;
+    }
+    if (pwd.length < 6) {
+      showMessage('registerMessage', '⚠️ A senha precisa ter pelo menos 6 caracteres.', 'error');
+      return;
+    }
+    if (pwd !== confirm) {
+      showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
+      return;
+    }
+    if (!captchaRegister) {
+      showMessage('registerMessage', '🤖 Complete o reCAPTCHA.', 'error');
+      return;
+    }
+    
     showMessage('registerMessage', '🔐 Criando conta segura...', 'success');
+    
     try {
       const success = await registerUser(name, email, pwd);
       if (success) {
-        showMessage('registerMessage', '🎉 Conta criada! Redirecionando para login...', 'success');
+        showMessage('registerMessage', '🎉 Conta criada com sucesso!', 'success');
+        
+        // Limpar formulário
         document.getElementById('regName').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regConfirmPassword').value = '';
-        if (window.grecaptcha) window.grecaptcha.reset();
+        
+        // Reset captcha
+        if (window.grecaptcha) {
+          const el = document.querySelector('#registerForm .g-recaptcha');
+          if (el) window.grecaptcha.reset();
+        }
         captchaRegister = false;
         document.getElementById('registerBtn').disabled = true;
+        
+        // Mudar para aba de login
         setTimeout(() => {
           document.querySelector('.tab-btn[data-tab="login"]').click();
           showMessage('loginMessage', '✨ Conta criada! Agora faça login.', 'success');
-        }, 1400);
+        }, 1500);
       } else {
         showMessage('registerMessage', '📧 Este e-mail já está cadastrado.', 'error');
-        if (window.grecaptcha) window.grecaptcha.reset();
+        if (window.grecaptcha) {
+          const el = document.querySelector('#registerForm .g-recaptcha');
+          if (el) window.grecaptcha.reset();
+        }
         captchaRegister = false;
         document.getElementById('registerBtn').disabled = true;
       }
-    } catch (err) { console.error(err); showMessage('registerMessage', '❌ Erro ao criar conta.', 'error'); }
+    } catch (err) { 
+      console.error('Erro detalhado:', err);
+      showMessage('registerMessage', '❌ Erro ao criar conta: ' + err.message, 'error');
+    }
   }
 
   // Tab switch
@@ -518,6 +572,7 @@
     const registerForm = document.getElementById('registerForm');
     const loginTab = document.querySelector('.tab-btn[data-tab="login"]');
     const regTab = document.querySelector('.tab-btn[data-tab="register"]');
+    
     if (tab === 'login') {
       loginForm.classList.add('active');
       registerForm.classList.remove('active');
@@ -535,20 +590,22 @@
     }
   }
 
-  // Eventos
+  // Event listeners
   document.getElementById('loginForm').addEventListener('submit', handleLogin);
   document.getElementById('registerForm').addEventListener('submit', handleRegister);
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Criar um usuário de demonstração se não existir nenhum (opcional)
+  // Criar usuário demo se não existir
   window.addEventListener('load', async () => {
     const users = getUsers();
     if (users.length === 0) {
-      await registerUser('Visitante Exemplo', 'demo@blog.com', '123456');
+      try {
+        await registerUser('Visitante Demo', 'demo@blog.com', '123456');
+        console.log('Usuário demo criado');
+      } catch(e) { console.error('Erro ao criar demo:', e); }
     }
-    // garantir botões desabilitados inicialmente
     document.getElementById('loginBtn').disabled = true;
     document.getElementById('registerBtn').disabled = true;
   });
