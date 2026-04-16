@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Login | Gabriel Silva</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0d0d14 50%, #0f0f18 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* Animated background */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .shape {
+      position: absolute;
+      background: rgba(124, 58, 237, 0.08);
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: float 20s infinite ease-in-out;
+    }
+    .shape-1 { width: 400px; height: 400px; top: -150px; left: -150px; }
+    .shape-2 { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: -5s; }
+    .shape-3 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+      50% { transform: translate(30px, -20px) scale(1.1); opacity: 0.7; }
+    }
+
+    /* Main Card */
+    .auth-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 480px;
+      background: rgba(19, 19, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 48px;
+      padding: 2rem;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .logo-icon i {
+      font-size: 2rem;
+      color: white;
+    }
+    .auth-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #c084fc, #a855f7);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .auth-header p {
+      color: #8b8ca8;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Google Button */
+    .google-btn {
+      width: 100%;
+      background: #ffffff;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #1f1f2f;
+      margin-bottom: 1.5rem;
+    }
+    .google-btn img {
+      width: 22px;
+      height: 22px;
+    }
+    .google-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #6a6a80;
+      font-size: 0.8rem;
+      margin: 1.5rem 0;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #2a2a35;
+    }
+    .divider::before {
+      margin-right: 1rem;
+    }
+    .divider::after {
+      margin-left: 1rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      background: #0a0a0f;
+      padding: 0.3rem;
+      border-radius: 60px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 40px;
+      transition: 0.2s;
+      color: #b8b9d6;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Forms */
+    .form {
+      display: none;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form.active {
+      display: flex;
+    }
+    .input-group {
+      position: relative;
+    }
+    .input-group i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7c3aed;
+      font-size: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.8rem;
+      background: #0a0a0f;
+      border: 1.5px solid #2a2a35;
+      border-radius: 28px;
+      font-size: 0.95rem;
+      color: #ecedee;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    input:focus {
+      outline: none;
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    }
+    input::placeholder {
+      color: #5a5a70;
+    }
+
+    /* reCAPTCHA */
+    .captcha-container {
+      display: flex;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+    .g-recaptcha {
+      transform: scale(0.92);
+      transform-origin: center;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.5);
+    }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      padding: 0.75rem;
+      border-radius: 28px;
+      font-size: 0.85rem;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border-left: 3px solid #ef4444;
+      display: block;
+    }
+    .message.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border-left: 3px solid #22c55e;
+      display: block;
+    }
+
+    .info-text {
+      font-size: 0.7rem;
+      color: #6a6a80;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 520px) {
+      .auth-container { padding: 1.5rem; margin: 1rem; }
+      .captcha-container { transform: scale(0.85); }
+    }
+  </style>
+  <!-- Google reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="bg-shapes">
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+</div>
+
+<div class="auth-container">
+  <div class="auth-header">
+    <div class="logo-icon">
+      <i class="fas fa-feather-alt"></i>
+    </div>
+    <h1>Gabriel Silva</h1>
+    <p>Acesse para explorar todo o conteúdo</p>
+  </div>
+
+  <!-- Botão Google -->
+  <div id="googleButtonContainer"></div>
+  
+  <div class="divider">ou acesse com email</div>
+
+  <!-- Tabs para login/senha -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="login">🔐 Entrar</button>
+    <button class="tab-btn" data-tab="register">📝 Criar conta</button>
+  </div>
+
+  <!-- Login Form (email/senha) -->
+  <form id="loginForm" class="form active">
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="loginPassword" placeholder="Senha" required>
+    </div>
+    <div class="captcha-container">
+      <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onCaptchaLoginSuccess"></div>
+    </div>
+    <button type="submit" class="submit-btn" id="loginBtn" disabled><i class="fas fa-arrow-right-to-bracket"></i> Entrar</button>
+    <div id="loginMessage" class="message"></div>
+  </form>
+
+  <!-- Register Form (email/senha) -->
+  <form id="registerForm" class="form">
+    <div class="input-group">
+      <i class="fas fa-user"></i>
+      <input type="text" id="regName" placeholder="Nome completo" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="regEmail" placeholder="seu@email.com" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="regPassword" placeholder="Senha (mínimo 6 caracteres)" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-check-circle"></i>
+      <input type="password" id="regConfirmPassword" placeholder="Confirmar senha" required>
+    </div>
+    <div class="captcha-container">
+      <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onCaptchaRegisterSuccess"></div>
+    </div>
+    <button type="submit" class="submit-btn" id="registerBtn" disabled><i class="fas fa-user-plus"></i> Criar conta</button>
+    <div id="registerMessage" class="message"></div>
+  </form>
+
+  <div class="info-text">
+    🔒 Protegido com reCAPTCHA v2 | Login com Google disponível
+  </div>
+</div>
+
+<script>
+  // Google Client ID
+  const GOOGLE_CLIENT_ID = "1047158509788-3u5758gqa89npql5otipsq99etvm9q54.apps.googleusercontent.com";
+  
+  // Simulated user database (localStorage)
+  function getUsers() {
+    const users = localStorage.getItem('blog_users');
+    return users ? JSON.parse(users) : [];
+  }
+  
+  function saveUsers(users) {
+    localStorage.setItem('blog_users', JSON.stringify(users));
+  }
+  
+  function isEmailRegistered(email) {
+    const users = getUsers();
+    return users.some(user => user.email === email);
+  }
+  
+  function registerUser(name, email, password, isGoogle = false) {
+    const users = getUsers();
+    if (isEmailRegistered(email)) return false;
+    users.push({ 
+      name, 
+      email, 
+      password: isGoogle ? 'google_auth' : password, 
+      isGoogle,
+      createdAt: new Date().toISOString() 
+    });
+    saveUsers(users);
+    return true;
+  }
+  
+  function authenticateUser(email, password) {
+    const users = getUsers();
+    return users.find(user => user.email === email && user.password === password);
+  }
+  
+  function authenticateGoogleUser(email, name) {
+    const users = getUsers();
+    let user = users.find(u => u.email === email);
+    if (!user) {
+      // Auto-register Google user
+      registerUser(name, email, 'google_auth', true);
+      user = { name, email };
+    }
+    return user;
+  }
+
+  // Redirect to blog
+  function redirectToBlog() {
+    setTimeout(() => {
+      window.location.href = "https://gwssite.github.io/GabrielSilva/";
+    }, 800);
+  }
+
+  // Store session and redirect
+  function loginSuccess(userName, userEmail) {
+    sessionStorage.setItem('blog_logged_user', JSON.stringify({ name: userName, email: userEmail }));
+    redirectToBlog();
+  }
+
+  // reCAPTCHA state
+  let captchaLoginResolved = false;
+  let captchaRegisterResolved = false;
+  
+  window.onCaptchaLoginSuccess = function() {
+    captchaLoginResolved = true;
+    document.getElementById('loginBtn').disabled = false;
+  };
+  
+  window.onCaptchaRegisterSuccess = function() {
+    captchaRegisterResolved = true;
+    document.getElementById('registerBtn').disabled = false;
+  };
+  
+  function resetCaptchaForTab(tab) {
+    if (tab === 'login') {
+      captchaLoginResolved = false;
+      document.getElementById('loginBtn').disabled = true;
+      if (window.grecaptcha) {
+        const loginCaptcha = document.querySelector('#loginForm .g-recaptcha');
+        if (loginCaptcha) window.grecaptcha.reset();
+      }
+    } else {
+      captchaRegisterResolved = false;
+      document.getElementById('registerBtn').disabled = true;
+      if (window.grecaptcha) {
+        const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
+        if (regCaptcha) window.grecaptcha.reset();
+      }
+    }
+  }
+  
+  function showMessage(elementId, message, type) {
+    const msgDiv = document.getElementById(elementId);
+    if (!msgDiv) return;
+    msgDiv.textContent = message;
+    msgDiv.className = `message ${type}`;
+    msgDiv.style.display = 'block';
+    setTimeout(() => {
+      if (msgDiv) msgDiv.style.display = 'none';
+    }, 4000);
+  }
+
+  // Email/Password Login
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!email || !password) {
+      showMessage('loginMessage', '❌ Preencha email e senha.', 'error');
+      return;
+    }
+    
+    if (!captchaLoginResolved) {
+      showMessage('loginMessage', '🤖 Por favor, complete o reCAPTCHA.', 'error');
+      return;
+    }
+    
+    const user = authenticateUser(email, password);
+    if (user) {
+      showMessage('loginMessage', '✅ Login bem-sucedido! Redirecionando...', 'success');
+      loginSuccess(user.name, user.email);
+    } else {
+      showMessage('loginMessage', '❌ Email ou senha inválidos.', 'error');
+      captchaLoginResolved = false;
+      if (window.grecaptcha) {
+        const loginCaptcha = document.querySelector('#loginForm .g-recaptcha');
+        if (loginCaptcha) window.grecaptcha.reset();
+      }
+      document.getElementById('loginBtn').disabled = true;
+    }
+  }
+  
+  // Email/Password Register
+  async function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    
+    if (!name || !email || !password || !confirmPassword) {
+      showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
+      return;
+    }
+    
+    if (password.length < 6) {
+      showMessage('registerMessage', '⚠️ A senha deve ter pelo menos 6 caracteres.', 'error');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
+      return;
+    }
+    
+    if (!captchaRegisterResolved) {
+      showMessage('registerMessage', '🤖 Por favor, complete o reCAPTCHA.', 'error');
+      return;
+    }
+    
+    if (isEmailRegistered(email)) {
+      showMessage('registerMessage', '📧 Este email já está cadastrado. Faça login.', 'error');
+      captchaRegisterResolved = false;
+      if (window.grecaptcha) {
+        const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
+        if (regCaptcha) window.grecaptcha.reset();
+      }
+      document.getElementById('registerBtn').disabled = true;
+      return;
+    }
+    
+    const success = registerUser(name, email, password);
+    if (success) {
+      showMessage('registerMessage', '🎉 Conta criada com sucesso! Faça login.', 'success');
+      document.getElementById('regName').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+      document.getElementById('regConfirmPassword').value = '';
+      
+      captchaRegisterResolved = false;
+      if (window.grecaptcha) {
+        const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
+        if (regCaptcha) window.grecaptcha.reset();
+      }
+      document.getElementById('registerBtn').disabled = true;
+      
+      setTimeout(() => {
+        document.querySelector('.tab-btn[data-tab="login"]').click();
+        showMessage('loginMessage', '✨ Conta criada! Agora faça login.', 'success');
+      }, 1300);
+    } else {
+      showMessage('registerMessage', '❌ Erro ao criar conta.', 'error');
+      captchaRegisterResolved = false;
+      if (window.grecaptcha) {
+        const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
+        if (regCaptcha) window.grecaptcha.reset();
+      }
+      document.getElementById('registerBtn').disabled = true;
+    }
+  }
+  
+  // Tab switching
+  function switchTab(tabId) {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginTab = document.querySelector('.tab-btn[data-tab="login"]');
+    const registerTab = document.querySelector('.tab-btn[data-tab="register"]');
+    
+    if (tabId === 'login') {
+      loginForm.classList.add('active');
+      registerForm.classList.remove('active');
+      loginTab.classList.add('active');
+      registerTab.classList.remove('active');
+      document.getElementById('loginMessage').style.display = 'none';
+      resetCaptchaForTab('login');
+    } else {
+      registerForm.classList.add('active');
+      loginForm.classList.remove('active');
+      registerTab.classList.add('active');
+      loginTab.classList.remove('active');
+      document.getElementById('registerMessage').style.display = 'none';
+      resetCaptchaForTab('register');
+    }
+  }
+  
+  // Google Login Callback
+  function handleGoogleCredentialResponse(response) {
+    const credential = response.credential;
+    // Decode JWT to get user info
+    try {
+      const payload = JSON.parse(atob(credential.split('.')[1]));
+      const { email, name, picture } = payload;
+      
+      if (email) {
+        const user = authenticateGoogleUser(email, name || email.split('@')[0]);
+        sessionStorage.setItem('blog_logged_user', JSON.stringify({ name: user.name, email: user.email, picture }));
+        showMessage('loginMessage', '✅ Login com Google realizado! Redirecionando...', 'success');
+        redirectToBlog();
+      } else {
+        showMessage('loginMessage', '❌ Erro ao obter dados do Google.', 'error');
+      }
+    } catch (err) {
+      console.error('Google auth error', err);
+      showMessage('loginMessage', '❌ Falha na autenticação com Google.', 'error');
+    }
+  }
+  
+  // Initialize Google Sign-In button
+  function initGoogleButton() {
+    if (window.google && window.google.accounts) {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById('googleButtonContainer'),
+        { 
+          theme: 'filled_black',
+          size: 'large',
+          width: '100%',
+          text: 'continue_with',
+          shape: 'pill',
+          logo_alignment: 'center'
+        }
+      );
+      // Optional: prompt one-tap
+      // window.google.accounts.id.prompt();
+    } else {
+      console.warn("Google Identity Services not loaded yet");
+      setTimeout(initGoogleButton, 300);
+    }
+  }
+  
+  // Event listeners
+  document.getElementById('loginForm').addEventListener('submit', handleLogin);
+  document.getElementById('registerForm').addEventListener('submit', handleRegister);
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      switchTab(btn.getAttribute('data-tab'));
+    });
+  });
+  
+  // Create demo user if none exists
+  if (getUsers().length === 0) {
+    registerUser("Visitante Demo", "demo@blog.com", "123456");
+  }
+  
+  // Initialize Google button after DOM ready
+  window.addEventListener('load', () => {
+    initGoogleButton();
+    // Disable submit buttons until captcha
+    document.getElementById('loginBtn').disabled = true;
+    document.getElementById('registerBtn').disabled = true;
+  });
+</script>
+</body>
+</html>
