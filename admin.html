@@ -109,6 +109,24 @@
       color: #7a7a8c;
       margin-top: 6px;
     }
+    .video-preview {
+      margin-top: 0.8rem;
+      padding: 1rem;
+      background: #0a0a0f;
+      border-radius: 20px;
+      border: 1px solid #2a2a35;
+      display: none;
+    }
+    .video-preview.active {
+      display: block;
+    }
+    .video-preview iframe {
+      width: 100%;
+      max-width: 400px;
+      height: 225px;
+      border-radius: 16px;
+      border: none;
+    }
     .btn-submit {
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       color: white;
@@ -205,6 +223,15 @@
       font-size: 0.7rem;
       color: #9b8cbf;
     }
+    .video-badge {
+      display: inline-block;
+      background: #7c3aed20;
+      color: #c084fc;
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
     .delete-btn {
       background: none;
       border: none;
@@ -223,10 +250,6 @@
       text-align: center;
       color: #9b8cbf;
       padding: 1rem;
-    }
-    hr {
-      margin: 1rem 0;
-      border-color: #2a2a35;
     }
     footer {
       margin-top: 2rem;
@@ -256,13 +279,19 @@
       </div>
       <div class="form-group">
         <label>Conteúdo / Texto completo *</label>
-        <textarea id="postContent" placeholder="Escreva o conteúdo do artigo aqui. Será exibido na home (resumo) e completo em breve..." required></textarea>
+        <textarea id="postContent" placeholder="Escreva o conteúdo do artigo aqui..." required></textarea>
         <div class="helper-text">A página inicial mostrará um resumo de até 280 caracteres.</div>
       </div>
       <div class="form-group">
-        <label>URL da imagem de capa (opcional)</label>
+        <label>🎬 Link do YouTube (opcional)</label>
+        <input type="text" id="postVideo" placeholder="https://www.youtube.com/watch?v=SEU_VIDEO_ID ou https://youtu.be/SEU_VIDEO_ID">
+        <div class="helper-text">Cole qualquer link do YouTube. O vídeo será incorporado no post.</div>
+        <div id="videoPreviewContainer" class="video-preview"></div>
+      </div>
+      <div class="form-group">
+        <label>🖼️ URL da imagem de capa (opcional)</label>
         <input type="text" id="postImage" placeholder="https://exemplo.com/imagem.jpg">
-        <div class="helper-text">Deixe vazio para usar uma imagem padrão elegante.</div>
+        <div class="helper-text">Deixe vazio para usar uma imagem padrão. Se tiver vídeo, o vídeo terá destaque.</div>
       </div>
       <button type="submit" class="btn-submit" id="submitBtn">📤 Publicar post</button>
       <div id="formStatus"></div>
@@ -276,7 +305,7 @@
     </div>
   </div>
   <footer>
-    <p>⚡ Admin seguro via Firebase Realtime Database</p>
+    <p>⚡ Admin seguro via Firebase Realtime Database | Suporte a vídeos do YouTube</p>
   </footer>
 </div>
 
@@ -285,7 +314,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
 <script>
-  // Firebase configuration (mesmo da tela principal)
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
     authDomain: "fire-auth-2ca37.firebaseapp.com",
@@ -306,12 +335,69 @@
   const form = document.getElementById('postForm');
   const titleInput = document.getElementById('postTitle');
   const contentInput = document.getElementById('postContent');
+  const videoInput = document.getElementById('postVideo');
   const imageInput = document.getElementById('postImage');
   const submitBtn = document.getElementById('submitBtn');
   const formStatusDiv = document.getElementById('formStatus');
   const recentContainer = document.getElementById('recentPostsList');
+  const videoPreviewContainer = document.getElementById('videoPreviewContainer');
 
-  // Helper: escape HTML para segurança na exibição (admin preview)
+  // Função para extrair ID do YouTube de qualquer formato de URL
+  function extractYouTubeId(url) {
+    if (!url || url.trim() === '') return null;
+    
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=)([^&]+)/i,
+      /(?:youtube\.com\/embed\/)([^?]+)/i,
+      /(?:youtu\.be\/)([^?]+)/i,
+      /(?:youtube\.com\/shorts\/)([^?]+)/i,
+      /(?:youtube\.com\/v\/)([^?]+)/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    return null;
+  }
+
+  // Função para gerar embed URL
+  function getYouTubeEmbedUrl(url) {
+    const videoId = extractYouTubeId(url);
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    return null;
+  }
+
+  // Preview do vídeo enquanto digita
+  function updateVideoPreview() {
+    const videoUrl = videoInput.value.trim();
+    const embedUrl = getYouTubeEmbedUrl(videoUrl);
+    
+    if (embedUrl) {
+      videoPreviewContainer.innerHTML = `
+        <div style="margin-bottom: 8px; font-size: 0.8rem; color: #c084fc;">🎬 Pré-visualização:</div>
+        <iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="helper-text" style="margin-top: 6px;">✓ Vídeo detectado! Será incorporado no post.</div>
+      `;
+      videoPreviewContainer.classList.add('active');
+    } else if (videoUrl !== '') {
+      videoPreviewContainer.innerHTML = `
+        <div style="color: #f87171; font-size: 0.8rem;">⚠️ Link do YouTube inválido. Use formatos como: https://youtu.be/... ou https://www.youtube.com/watch?v=...</div>
+      `;
+      videoPreviewContainer.classList.add('active');
+    } else {
+      videoPreviewContainer.classList.remove('active');
+      videoPreviewContainer.innerHTML = '';
+    }
+  }
+
+  videoInput.addEventListener('input', updateVideoPreview);
+
+  // Helper: escape HTML
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -319,12 +405,10 @@
       if (m === '<') return '&lt;';
       if (m === '>') return '&gt;';
       return m;
-    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-      return c;
     });
   }
 
-  // Função para mostrar mensagem de status no form
+  // Mostrar mensagem de status
   function showMessage(message, type) {
     formStatusDiv.innerHTML = `<div class="status-msg ${type}">${message}</div>`;
     setTimeout(() => {
@@ -336,7 +420,7 @@
     }, 4000);
   }
 
-  // carregar lista de posts recentes (máx 6) para exibir e permitir deletar
+  // Carregar lista de posts recentes
   function loadRecentPosts() {
     postsRef.orderByChild('createdAt').once('value', (snapshot) => {
       const postsData = snapshot.val();
@@ -347,13 +431,11 @@
         return;
       }
 
-      // converter e ordenar decrescente por createdAt
       let postsArray = Object.keys(postsData).map(key => ({
         id: key,
         ...postsData[key]
       })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-      // limitar para exibir últimos 6
       const recentPosts = postsArray.slice(0, 6);
       if (recentPosts.length === 0) {
         recentContainer.innerHTML = '<div class="empty-list">📭 Nenhum post disponível</div>';
@@ -362,11 +444,15 @@
 
       for (let post of recentPosts) {
         const postDate = post.dateFormatted || (post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-BR') : 'Data desconhecida');
+        const hasVideo = post.videoUrl && post.videoUrl.trim() !== '';
         const miniDiv = document.createElement('div');
         miniDiv.className = 'mini-post';
         miniDiv.innerHTML = `
           <div class="mini-info">
-            <div class="mini-title">${escapeHtml(post.title.substring(0, 55))}${post.title.length > 55 ? '…' : ''}</div>
+            <div class="mini-title">
+              ${escapeHtml(post.title.substring(0, 55))}${post.title.length > 55 ? '…' : ''}
+              ${hasVideo ? '<span class="video-badge">🎬 Vídeo</span>' : ''}
+            </div>
             <div class="mini-date">📅 ${escapeHtml(postDate)}</div>
           </div>
           <button class="delete-btn" data-id="${post.id}" title="Excluir post">🗑️</button>
@@ -374,7 +460,6 @@
         recentContainer.appendChild(miniDiv);
       }
 
-      // adicionar eventos de delete para cada botão
       document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
@@ -390,25 +475,26 @@
     });
   }
 
-  // deletar post por ID
+  // Deletar post
   async function deletePostById(postId) {
     if (!postId) return;
     try {
       await postsRef.child(postId).remove();
       showMessage('✅ Post excluído com sucesso!', 'success');
-      loadRecentPosts();  // recarregar lista
+      loadRecentPosts();
     } catch (error) {
       console.error("Erro ao deletar:", error);
       showMessage(`❌ Erro ao excluir: ${error.message}`, 'error');
     }
   }
 
-  // enviar novo post
+  // Criar novo post com suporte a vídeo
   async function createNewPost(event) {
     event.preventDefault();
 
     const title = titleInput.value.trim();
     const content = contentInput.value.trim();
+    const videoUrl = videoInput.value.trim();
     const imageUrl = imageInput.value.trim();
 
     if (!title || !content) {
@@ -421,11 +507,22 @@
       return;
     }
 
-    // desabilitar botão durante envio
+    // Validar e processar vídeo
+    let validVideoUrl = '';
+    let videoEmbedUrl = '';
+    if (videoUrl) {
+      const videoId = extractYouTubeId(videoUrl);
+      if (videoId) {
+        validVideoUrl = videoUrl;
+        videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
+      } else {
+        showMessage('⚠️ Link do YouTube inválido. O post será criado sem vídeo.', 'error');
+      }
+    }
+
     submitBtn.disabled = true;
     submitBtn.textContent = '🔄 Publicando...';
 
-    // timestamp em milliseconds
     const nowTimestamp = Date.now();
     const formattedDate = new Date(nowTimestamp).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -437,44 +534,40 @@
       title: title,
       content: content,
       imageUrl: imageUrl || '',
+      videoUrl: validVideoUrl || '',
+      videoEmbedUrl: videoEmbedUrl || '',
       createdAt: nowTimestamp,
       dateFormatted: formattedDate,
     };
 
     try {
       await postsRef.push(newPost);
-      // limpar formulário
       titleInput.value = '';
       contentInput.value = '';
+      videoInput.value = '';
       imageInput.value = '';
-      showMessage('🎉 Post publicado com sucesso! Aparecerá na home imediatamente.', 'success');
-      // recarregar lista de posts recentes
+      videoPreviewContainer.classList.remove('active');
+      videoPreviewContainer.innerHTML = '';
+      showMessage('🎉 Post publicado com sucesso! Vídeo incorporado (se fornecido).', 'success');
       loadRecentPosts();
     } catch (error) {
       console.error("Erro ao salvar post:", error);
-      showMessage(`🔥 Erro ao publicar: ${error.message}. Verifique permissões do Firebase.`, 'error');
+      showMessage(`🔥 Erro ao publicar: ${error.message}`, 'error');
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = '📤 Publicar post';
     }
   }
 
-  // Event listener do form
   form.addEventListener('submit', createNewPost);
-
-  // carregar posts ao iniciar
   loadRecentPosts();
 
-  // checagem simples de conectividade
+  // Verificar conectividade
   window.addEventListener('load', () => {
     const connectedRef = database.ref('.info/connected');
     connectedRef.on('value', (snap) => {
       if (snap.val() === true) {
         console.log("Firebase conectado");
-      } else {
-        if (recentContainer.innerHTML.includes('Carregando posts') || recentContainer.innerHTML === '') {
-          recentContainer.innerHTML = '<div class="empty-list">⚠️ Modo offline: verifique conexão com internet e regras do Firebase.</div>';
-        }
       }
     });
   });
