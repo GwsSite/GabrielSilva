@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Login Seguro | Gabriel Silva</title>
+  <title>Acesso | Gabriel Silva</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- SCrypt Library for secure password hashing -->
+  <!-- SCrypt Library -->
   <script src="https://cdn.jsdelivr.net/npm/scrypt-js@3.0.1/scrypt.min.js"></script>
   <style>
     * {
@@ -28,6 +28,7 @@
       position: relative;
     }
 
+    /* Animated background */
     .bg-shapes {
       position: fixed;
       top: 0;
@@ -39,19 +40,20 @@
     }
     .shape {
       position: absolute;
-      background: rgba(124, 58, 237, 0.08);
+      background: rgba(124, 58, 237, 0.06);
       border-radius: 50%;
-      filter: blur(60px);
-      animation: float 20s infinite ease-in-out;
+      filter: blur(70px);
+      animation: float 22s infinite ease-in-out;
     }
-    .shape-1 { width: 400px; height: 400px; top: -150px; left: -150px; }
-    .shape-2 { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: -5s; }
-    .shape-3 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+    .shape-1 { width: 450px; height: 450px; top: -150px; left: -150px; }
+    .shape-2 { width: 550px; height: 550px; bottom: -200px; right: -150px; animation-delay: -6s; }
+    .shape-3 { width: 320px; height: 320px; top: 60%; left: 20%; animation-delay: -12s; }
     @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-      50% { transform: translate(30px, -20px) scale(1.1); opacity: 0.7; }
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+      50% { transform: translate(25px, -20px) scale(1.08); opacity: 0.8; }
     }
 
+    /* Main Card */
     .auth-container {
       position: relative;
       z-index: 10;
@@ -61,119 +63,82 @@
       backdrop-filter: blur(20px);
       border-radius: 48px;
       padding: 2rem;
-      border: 1px solid rgba(124, 58, 237, 0.3);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      box-shadow: 0 30px 55px -15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s;
+    }
+    .auth-container:hover {
+      border-color: rgba(124, 58, 237, 0.6);
     }
 
+    /* Header */
     .auth-header {
       text-align: center;
       margin-bottom: 2rem;
     }
     .logo-icon {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      border-radius: 20px;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(145deg, #7c3aed, #a855f7);
+      border-radius: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 1rem;
+      box-shadow: 0 12px 25px -8px rgba(124, 58, 237, 0.4);
     }
     .logo-icon i {
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: white;
     }
     .auth-header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #c084fc, #a855f7);
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e0d4ff, #c084fc, #a855f7);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
+      letter-spacing: -0.3px;
     }
     .auth-header p {
-      color: #8b8ca8;
+      color: #9b8cbf;
       font-size: 0.85rem;
       margin-top: 0.5rem;
     }
 
-    .google-btn {
-      width: 100%;
-      background: #ffffff;
-      border: none;
-      padding: 0.9rem;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: #1f1f2f;
-      margin-bottom: 1.5rem;
-    }
-    .google-btn img {
-      width: 22px;
-      height: 22px;
-    }
-    .google-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
-    }
-    .google-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: #6a6a80;
-      font-size: 0.8rem;
-      margin: 1.5rem 0;
-    }
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #2a2a35;
-    }
-    .divider::before { margin-right: 1rem; }
-    .divider::after { margin-left: 1rem; }
-
+    /* Tabs */
     .tabs {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      background: #0a0a0f;
-      padding: 0.3rem;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      background: #0f0f17;
+      padding: 0.35rem;
       border-radius: 60px;
+      border: 1px solid #252536;
     }
     .tab-btn {
       flex: 1;
       background: transparent;
       border: none;
       padding: 0.75rem;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      border-radius: 40px;
-      transition: 0.2s;
+      border-radius: 50px;
+      transition: all 0.25s;
       color: #b8b9d6;
     }
     .tab-btn.active {
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       color: white;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 6px 14px rgba(124, 58, 237, 0.35);
     }
 
+    /* Forms */
     .form {
       display: none;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.3rem;
     }
     .form.active {
       display: flex;
@@ -183,104 +148,121 @@
     }
     .input-group i {
       position: absolute;
-      left: 16px;
+      left: 18px;
       top: 50%;
       transform: translateY(-50%);
-      color: #7c3aed;
+      color: #a855f7;
       font-size: 1rem;
+      transition: 0.2s;
     }
     input {
       width: 100%;
-      padding: 0.9rem 1rem 0.9rem 2.8rem;
-      background: #0a0a0f;
-      border: 1.5px solid #2a2a35;
-      border-radius: 28px;
+      padding: 1rem 1rem 1rem 3rem;
+      background: #0c0c13;
+      border: 1.5px solid #262636;
+      border-radius: 34px;
       font-size: 0.95rem;
-      color: #ecedee;
-      transition: 0.2s;
+      color: #f0f0f5;
+      transition: all 0.2s;
       font-family: 'Inter', sans-serif;
     }
     input:focus {
       outline: none;
-      border-color: #7c3aed;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+      border-color: #a855f7;
+      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+      background: #111118;
     }
     input::placeholder {
-      color: #5a5a70;
+      color: #5e5e78;
+      font-weight: 400;
     }
 
+    /* reCAPTCHA */
     .captcha-container {
       display: flex;
       justify-content: center;
-      margin: 0.5rem 0;
+      margin: 0.3rem 0 0.2rem;
+      transform: scale(0.95);
     }
     .g-recaptcha {
-      transform: scale(0.92);
       transform-origin: center;
     }
 
+    /* Submit Button */
     .submit-btn {
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       border: none;
-      padding: 0.9rem;
-      border-radius: 40px;
+      padding: 1rem;
+      border-radius: 44px;
       font-weight: 700;
       font-size: 1rem;
       color: white;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
       margin-top: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
+      letter-spacing: 0.3px;
     }
     .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px -6px rgba(124, 58, 237, 0.55);
+      filter: brightness(1.02);
     }
     .submit-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
+      box-shadow: none;
     }
 
+    /* Messages */
     .message {
-      padding: 0.75rem;
+      padding: 0.8rem;
       border-radius: 28px;
       font-size: 0.85rem;
       text-align: center;
       display: none;
+      font-weight: 500;
     }
     .message.error {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
+      background: rgba(239, 68, 68, 0.12);
+      color: #ffa4a4;
       border-left: 3px solid #ef4444;
       display: block;
     }
     .message.success {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
+      background: rgba(34, 197, 94, 0.1);
+      color: #8bffb4;
       border-left: 3px solid #22c55e;
       display: block;
     }
 
     .info-text {
       font-size: 0.7rem;
-      color: #6a6a80;
+      color: #7c6b9e;
       text-align: center;
       margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .info-text i {
+      color: #a855f7;
     }
 
-    @media (max-width: 520px) {
-      .auth-container { padding: 1.5rem; margin: 1rem; }
-      .captcha-container { transform: scale(0.85); }
+    @media (max-width: 540px) {
+      body { padding: 1rem; }
+      .auth-container { padding: 1.5rem; margin: 0.5rem; }
+      .captcha-container { transform: scale(0.82); }
+      .tab-btn { font-size: 0.85rem; }
     }
   </style>
   <!-- Google reCAPTCHA v2 -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <!-- Google Identity Services SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <div class="bg-shapes">
@@ -295,52 +277,49 @@
       <i class="fas fa-feather-alt"></i>
     </div>
     <h1>Gabriel Silva</h1>
-    <p>Acesse para explorar todo o conteúdo</p>
+    <p>Explore todo o conteúdo com segurança</p>
   </div>
 
-  <div id="googleButtonContainer"></div>
-  
-  <div class="divider">ou acesse com email</div>
-
+  <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-btn active" data-tab="login">🔐 Entrar</button>
-    <button class="tab-btn" data-tab="register">📝 Criar conta</button>
+    <button class="tab-btn active" data-tab="login">🔐 Acessar conta</button>
+    <button class="tab-btn" data-tab="register">✨ Criar conta</button>
   </div>
 
   <!-- Login Form -->
   <form id="loginForm" class="form active">
     <div class="input-group">
       <i class="fas fa-envelope"></i>
-      <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email" required>
     </div>
     <div class="input-group">
       <i class="fas fa-lock"></i>
-      <input type="password" id="loginPassword" placeholder="Senha" required>
+      <input type="password" id="loginPassword" placeholder="Senha" autocomplete="current-password" required>
     </div>
     <div class="captcha-container">
       <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onCaptchaLoginSuccess"></div>
     </div>
-    <button type="submit" class="submit-btn" id="loginBtn" disabled><i class="fas fa-arrow-right-to-bracket"></i> Entrar</button>
+    <button type="submit" class="submit-btn" id="loginBtn" disabled><i class="fas fa-arrow-right-to-bracket"></i> Entrar agora</button>
     <div id="loginMessage" class="message"></div>
   </form>
 
   <!-- Register Form -->
   <form id="registerForm" class="form">
     <div class="input-group">
-      <i class="fas fa-user"></i>
-      <input type="text" id="regName" placeholder="Nome completo" required>
+      <i class="fas fa-user-astronaut"></i>
+      <input type="text" id="regName" placeholder="Nome completo" autocomplete="name" required>
     </div>
     <div class="input-group">
       <i class="fas fa-envelope"></i>
-      <input type="email" id="regEmail" placeholder="seu@email.com" required>
+      <input type="email" id="regEmail" placeholder="Melhor e-mail" autocomplete="email" required>
     </div>
     <div class="input-group">
-      <i class="fas fa-lock"></i>
-      <input type="password" id="regPassword" placeholder="Senha (mínimo 6 caracteres)" required>
+      <i class="fas fa-key"></i>
+      <input type="password" id="regPassword" placeholder="Senha (mínimo 6 caracteres)" autocomplete="new-password" required>
     </div>
     <div class="input-group">
       <i class="fas fa-check-circle"></i>
-      <input type="password" id="regConfirmPassword" placeholder="Confirmar senha" required>
+      <input type="password" id="regConfirmPassword" placeholder="Confirmar senha" autocomplete="off" required>
     </div>
     <div class="captcha-container">
       <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="onCaptchaRegisterSuccess"></div>
@@ -350,12 +329,12 @@
   </form>
 
   <div class="info-text">
-    🔒 Senhas protegidas com SCrypt (hash seguro) | reCAPTCHA v2
+    <i class="fas fa-shield-alt"></i> Senhas protegidas com SCrypt • reCAPTCHA v2
   </div>
 </div>
 
 <script>
-  // SCrypt Configuration from hash_config
+  // ==================== SCrypt Configuration (mesmo hash_config) ====================
   const SCRYPT_CONFIG = {
     algorithm: "SCRYPT",
     base64_signer_key: "2h2oi0hct4qgu1elOGE94ptKSc17Zey/oX3ejFT31Sbp/mh8K89Vo58/yk2WoQWi2TcpuReZPZ9XnCKi6gsY3w==",
@@ -364,359 +343,212 @@
     mem_cost: 14
   };
 
-  // Decode base64 to Uint8Array
   function base64ToBytes(base64) {
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return bytes;
   }
 
   const signerKey = base64ToBytes(SCRYPT_CONFIG.base64_signer_key);
   const saltSeparator = base64ToBytes(SCRYPT_CONFIG.base64_salt_separator);
 
-  // Generate random salt (16 bytes)
   function generateSalt() {
     const salt = new Uint8Array(16);
     crypto.getRandomValues(salt);
     return salt;
   }
 
-  // Hash password using SCrypt
   async function hashPassword(password, salt) {
     const passwordBytes = new TextEncoder().encode(password);
-    // Combine salt with saltSeparator as per Firebase Scrypt format
     const fullSalt = new Uint8Array(salt.length + saltSeparator.length);
     fullSalt.set(salt);
     fullSalt.set(saltSeparator, salt.length);
-    
     return new Promise((resolve, reject) => {
       scrypt(
         passwordBytes,
         fullSalt,
-        Math.pow(2, SCRYPT_CONFIG.mem_cost), // N = 2^mem_cost
-        SCRYPT_CONFIG.rounds, // r
-        1, // p = 1 (Firebase uses p=1)
-        32, // dkLen = 32 bytes
+        Math.pow(2, SCRYPT_CONFIG.mem_cost),
+        SCRYPT_CONFIG.rounds,
+        1,
+        32,
         (error, progress, key) => {
-          if (error) {
-            reject(error);
-          } else if (key) {
-            // Return combined: base64(salt) + ":" + base64(hash)
-            const saltBase64 = btoa(String.fromCharCode.apply(null, salt));
-            const hashBase64 = btoa(String.fromCharCode.apply(null, key));
-            resolve(`${saltBase64}:${hashBase64}`);
+          if (error) reject(error);
+          else if (key) {
+            const saltB64 = btoa(String.fromCharCode(...salt));
+            const hashB64 = btoa(String.fromCharCode(...key));
+            resolve(`${saltB64}:${hashB64}`);
           }
         }
       );
     });
   }
 
-  // Verify password against stored hash
   async function verifyPassword(password, storedHash) {
-    const [saltBase64, storedHashBase64] = storedHash.split(':');
-    const salt = base64ToBytes(saltBase64);
+    const [saltB64, storedHashB64] = storedHash.split(':');
+    const salt = base64ToBytes(saltB64);
     const computedHash = await hashPassword(password, salt);
-    const [, computedHashBase64] = computedHash.split(':');
-    return storedHashBase64 === computedHashBase64;
+    const computedHashB64 = computedHash.split(':')[1];
+    return storedHashB64 === computedHashB64;
   }
 
-  // User database (localStorage)
-  function getUsers() {
-    const users = localStorage.getItem('blog_users_scrypt');
-    return users ? JSON.parse(users) : [];
-  }
-  
-  function saveUsers(users) {
-    localStorage.setItem('blog_users_scrypt', JSON.stringify(users));
-  }
-  
+  // User DB (localStorage)
+  function getUsers() { return JSON.parse(localStorage.getItem('blog_users_scrypt') || '[]'); }
+  function saveUsers(users) { localStorage.setItem('blog_users_scrypt', JSON.stringify(users)); }
+
   async function registerUser(name, email, password) {
     const users = getUsers();
     if (users.some(u => u.email === email)) return false;
-    
     const salt = generateSalt();
     const passwordHash = await hashPassword(password, salt);
-    
-    users.push({ 
-      name, 
-      email, 
-      passwordHash,
-      createdAt: new Date().toISOString(),
-      provider: 'email'
-    });
+    users.push({ name, email, passwordHash, provider: 'email', createdAt: new Date().toISOString() });
     saveUsers(users);
     return true;
   }
-  
+
   async function authenticateUser(email, password) {
     const users = getUsers();
     const user = users.find(u => u.email === email && u.provider === 'email');
     if (!user) return null;
-    
-    const isValid = await verifyPassword(password, user.passwordHash);
-    if (isValid) return user;
-    return null;
-  }
-  
-  function authenticateGoogleUser(email, name) {
-    const users = getUsers();
-    let user = users.find(u => u.email === email);
-    if (!user) {
-      user = { 
-        name, 
-        email, 
-        provider: 'google',
-        createdAt: new Date().toISOString()
-      };
-      users.push(user);
-      saveUsers(users);
-    }
-    return user;
+    const ok = await verifyPassword(password, user.passwordHash);
+    return ok ? user : null;
   }
 
   function redirectToBlog() {
-    setTimeout(() => {
-      window.location.href = "https://gwssite.github.io/GabrielSilva/";
-    }, 800);
+    setTimeout(() => { window.location.href = "https://gwssite.github.io/GabrielSilva/"; }, 900);
   }
-
-  function loginSuccess(userName, userEmail) {
-    sessionStorage.setItem('blog_logged_user', JSON.stringify({ name: userName, email: userEmail }));
+  function loginSuccess(name, email) {
+    sessionStorage.setItem('blog_logged_user', JSON.stringify({ name, email }));
     redirectToBlog();
   }
 
   // reCAPTCHA state
-  let captchaLoginResolved = false;
-  let captchaRegisterResolved = false;
-  
-  window.onCaptchaLoginSuccess = function() {
-    captchaLoginResolved = true;
-    document.getElementById('loginBtn').disabled = false;
-  };
-  
-  window.onCaptchaRegisterSuccess = function() {
-    captchaRegisterResolved = true;
-    document.getElementById('registerBtn').disabled = false;
-  };
-  
-  function resetCaptchaForTab(tab) {
+  let captchaLogin = false, captchaRegister = false;
+  window.onCaptchaLoginSuccess = () => { captchaLogin = true; document.getElementById('loginBtn').disabled = false; };
+  window.onCaptchaRegisterSuccess = () => { captchaRegister = true; document.getElementById('registerBtn').disabled = false; };
+
+  function resetCaptcha(tab) {
     if (tab === 'login') {
-      captchaLoginResolved = false;
+      captchaLogin = false;
       document.getElementById('loginBtn').disabled = true;
       if (window.grecaptcha) {
-        const loginCaptcha = document.querySelector('#loginForm .g-recaptcha');
-        if (loginCaptcha) window.grecaptcha.reset();
+        const el = document.querySelector('#loginForm .g-recaptcha');
+        if (el) window.grecaptcha.reset();
       }
     } else {
-      captchaRegisterResolved = false;
+      captchaRegister = false;
       document.getElementById('registerBtn').disabled = true;
       if (window.grecaptcha) {
-        const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
-        if (regCaptcha) window.grecaptcha.reset();
+        const el = document.querySelector('#registerForm .g-recaptcha');
+        if (el) window.grecaptcha.reset();
       }
     }
   }
-  
-  function showMessage(elementId, message, type) {
-    const msgDiv = document.getElementById(elementId);
-    if (!msgDiv) return;
-    msgDiv.textContent = message;
-    msgDiv.className = `message ${type}`;
-    msgDiv.style.display = 'block';
-    setTimeout(() => {
-      if (msgDiv) msgDiv.style.display = 'none';
-    }, 4000);
+
+  function showMessage(divId, msg, type) {
+    const el = document.getElementById(divId);
+    if (!el) return;
+    el.textContent = msg;
+    el.className = `message ${type}`;
+    setTimeout(() => { if (el) el.style.display = 'none'; }, 4200);
+    el.style.display = 'block';
   }
 
-  // Email/Password Login
+  // Login handler
   async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    
-    if (!email || !password) {
-      showMessage('loginMessage', '❌ Preencha email e senha.', 'error');
-      return;
-    }
-    
-    if (!captchaLoginResolved) {
-      showMessage('loginMessage', '🤖 Por favor, complete o reCAPTCHA.', 'error');
-      return;
-    }
-    
+    if (!email || !password) return showMessage('loginMessage', '❌ Preencha e-mail e senha.', 'error');
+    if (!captchaLogin) return showMessage('loginMessage', '🤖 Complete o reCAPTCHA primeiro.', 'error');
     showMessage('loginMessage', '⏳ Verificando credenciais...', 'success');
-    
     try {
       const user = await authenticateUser(email, password);
       if (user) {
-        showMessage('loginMessage', '✅ Login bem-sucedido! Redirecionando...', 'success');
+        showMessage('loginMessage', '✅ Acesso autorizado! Redirecionando...', 'success');
         loginSuccess(user.name, user.email);
       } else {
-        showMessage('loginMessage', '❌ Email ou senha inválidos.', 'error');
-        captchaLoginResolved = false;
-        if (window.grecaptcha) {
-          const loginCaptcha = document.querySelector('#loginForm .g-recaptcha');
-          if (loginCaptcha) window.grecaptcha.reset();
-        }
+        showMessage('loginMessage', '❌ E-mail ou senha incorretos.', 'error');
+        captchaLogin = false;
+        if (window.grecaptcha) window.grecaptcha.reset();
         document.getElementById('loginBtn').disabled = true;
       }
-    } catch (err) {
-      console.error(err);
-      showMessage('loginMessage', '❌ Erro ao processar login.', 'error');
-    }
+    } catch (err) { console.error(err); showMessage('loginMessage', '❌ Erro interno. Tente novamente.', 'error'); }
   }
-  
-  // Email/Password Register
+
+  // Register handler
   async function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const confirmPassword = document.getElementById('regConfirmPassword').value;
-    
-    if (!name || !email || !password || !confirmPassword) {
-      showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
-      return;
-    }
-    
-    if (password.length < 6) {
-      showMessage('registerMessage', '⚠️ A senha deve ter pelo menos 6 caracteres.', 'error');
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
-      return;
-    }
-    
-    if (!captchaRegisterResolved) {
-      showMessage('registerMessage', '🤖 Por favor, complete o reCAPTCHA.', 'error');
-      return;
-    }
-    
-    showMessage('registerMessage', '⏳ Criando conta segura...', 'success');
-    
+    const pwd = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirmPassword').value;
+    if (!name || !email || !pwd || !confirm) return showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
+    if (pwd.length < 6) return showMessage('registerMessage', '⚠️ A senha precisa ter pelo menos 6 caracteres.', 'error');
+    if (pwd !== confirm) return showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
+    if (!captchaRegister) return showMessage('registerMessage', '🤖 Complete o reCAPTCHA.', 'error');
+    showMessage('registerMessage', '🔐 Criando conta segura...', 'success');
     try {
-      const success = await registerUser(name, email, password);
+      const success = await registerUser(name, email, pwd);
       if (success) {
-        showMessage('registerMessage', '🎉 Conta criada com sucesso! Faça login.', 'success');
+        showMessage('registerMessage', '🎉 Conta criada! Redirecionando para login...', 'success');
         document.getElementById('regName').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regConfirmPassword').value = '';
-        
-        captchaRegisterResolved = false;
-        if (window.grecaptcha) {
-          const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
-          if (regCaptcha) window.grecaptcha.reset();
-        }
+        if (window.grecaptcha) window.grecaptcha.reset();
+        captchaRegister = false;
         document.getElementById('registerBtn').disabled = true;
-        
         setTimeout(() => {
           document.querySelector('.tab-btn[data-tab="login"]').click();
           showMessage('loginMessage', '✨ Conta criada! Agora faça login.', 'success');
-        }, 1300);
+        }, 1400);
       } else {
-        showMessage('registerMessage', '❌ Este email já está cadastrado.', 'error');
-        captchaRegisterResolved = false;
-        if (window.grecaptcha) {
-          const regCaptcha = document.querySelector('#registerForm .g-recaptcha');
-          if (regCaptcha) window.grecaptcha.reset();
-        }
+        showMessage('registerMessage', '📧 Este e-mail já está cadastrado.', 'error');
+        if (window.grecaptcha) window.grecaptcha.reset();
+        captchaRegister = false;
         document.getElementById('registerBtn').disabled = true;
       }
-    } catch (err) {
-      console.error(err);
-      showMessage('registerMessage', '❌ Erro ao criar conta.', 'error');
-    }
+    } catch (err) { console.error(err); showMessage('registerMessage', '❌ Erro ao criar conta.', 'error'); }
   }
-  
-  // Tab switching
-  function switchTab(tabId) {
+
+  // Tab switch
+  function switchTab(tab) {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const loginTab = document.querySelector('.tab-btn[data-tab="login"]');
-    const registerTab = document.querySelector('.tab-btn[data-tab="register"]');
-    
-    if (tabId === 'login') {
+    const regTab = document.querySelector('.tab-btn[data-tab="register"]');
+    if (tab === 'login') {
       loginForm.classList.add('active');
       registerForm.classList.remove('active');
       loginTab.classList.add('active');
-      registerTab.classList.remove('active');
+      regTab.classList.remove('active');
       document.getElementById('loginMessage').style.display = 'none';
-      resetCaptchaForTab('login');
+      resetCaptcha('login');
     } else {
       registerForm.classList.add('active');
       loginForm.classList.remove('active');
-      registerTab.classList.add('active');
+      regTab.classList.add('active');
       loginTab.classList.remove('active');
       document.getElementById('registerMessage').style.display = 'none';
-      resetCaptchaForTab('register');
+      resetCaptcha('register');
     }
   }
-  
-  // Google Login - CORRIGIDO
-  function handleGoogleCredentialResponse(response) {
-    try {
-      const credential = response.credential;
-      const payload = JSON.parse(atob(credential.split('.')[1]));
-      const { email, name } = payload;
-      
-      if (email) {
-        const user = authenticateGoogleUser(email, name || email.split('@')[0]);
-        sessionStorage.setItem('blog_logged_user', JSON.stringify({ name: user.name, email: user.email }));
-        showMessage('loginMessage', '✅ Login com Google realizado! Redirecionando...', 'success');
-        redirectToBlog();
-      } else {
-        showMessage('loginMessage', '❌ Erro ao obter dados do Google.', 'error');
-      }
-    } catch (err) {
-      console.error('Google auth error', err);
-      showMessage('loginMessage', '❌ Falha na autenticação com Google. Tente novamente.', 'error');
-    }
-  }
-  
-  // Initialize Google Sign-In with corrected configuration
-  function initGoogleButton() {
-    if (window.google && window.google.accounts) {
-      window.google.accounts.id.initialize({
-        client_id: "1047158509788-3u5758gqa89npql5otipsq99etvm9q54.apps.googleusercontent.com",
-        callback: handleGoogleCredentialResponse,
-        auto_select: false,
-        cancel_on_tap_outside: true,
-        context: 'signin'
-      });
-      window.google.accounts.id.renderButton(
-        document.getElementById('googleButtonContainer'),
-        { 
-          theme: 'filled_black',
-          size: 'large',
-          width: '100%',
-          text: 'continue_with',
-          shape: 'pill',
-          logo_alignment: 'center'
-        }
-      );
-    } else {
-      setTimeout(initGoogleButton, 300);
-    }
-  }
-  
-  // Event listeners
+
+  // Eventos
   document.getElementById('loginForm').addEventListener('submit', handleLogin);
   document.getElementById('registerForm').addEventListener('submit', handleRegister);
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      switchTab(btn.getAttribute('data-tab'));
-    });
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
-  
-  // Initialize
-  window.addEventListener('load', () => {
-    initGoogleButton();
+
+  // Criar um usuário de demonstração se não existir nenhum (opcional)
+  window.addEventListener('load', async () => {
+    const users = getUsers();
+    if (users.length === 0) {
+      await registerUser('Visitante Exemplo', 'demo@blog.com', '123456');
+    }
+    // garantir botões desabilitados inicialmente
     document.getElementById('loginBtn').disabled = true;
     document.getElementById('registerBtn').disabled = true;
   });
