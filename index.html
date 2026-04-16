@@ -51,7 +51,7 @@
     /* posts grid */
     .posts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 2rem;
     }
     .post-card {
@@ -69,12 +69,46 @@
       border-color: #7c3aed;
       box-shadow: 0 24px 36px -12px rgba(124, 58, 237, 0.25);
     }
+    .post-media {
+      width: 100%;
+      position: relative;
+      background: #1e1e2a;
+    }
     .post-image {
       width: 100%;
-      height: 200px;
+      height: 220px;
       object-fit: cover;
-      background: #1e1e2a;
       display: block;
+    }
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      background: #000;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(124, 58, 237, 0.9);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .post-content {
       padding: 1.6rem;
@@ -106,6 +140,19 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+    .read-more {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #c084fc;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .read-more:hover {
+      color: #e9d5ff;
+      transform: translateX(4px);
+    }
     .no-posts {
       text-align: center;
       padding: 3rem;
@@ -132,6 +179,7 @@
     @media (max-width: 640px) {
       .container { padding: 1.5rem; }
       .post-title { font-size: 1.3rem; }
+      .posts-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -174,6 +222,35 @@
   const database = firebase.database();
   const postsRef = database.ref('blog_posts'); // reference to store posts
 
+  // Helper to escape HTML
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Helper to format date nicely
+  function formatDate(timestamp, formattedDate) {
+    if (formattedDate) return formattedDate;
+    if (timestamp) {
+      return new Date(timestamp).toLocaleDateString('pt-BR', {
+        day: '2-digit', month: 'long', year: 'numeric'
+      });
+    }
+    return 'Data desconhecida';
+  }
+
+  // Helper to truncate text
+  function truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  }
+
   // Load and display posts (ordered by date descending)
   function loadPosts() {
     const container = document.getElementById('postsContainer');
@@ -198,45 +275,211 @@
         const card = document.createElement('article');
         card.className = 'post-card';
 
-        // image handling: if no image, dark placeholder with gradient
-        const imageUrl = post.imageUrl && post.imageUrl.trim() !== "" 
-          ? post.imageUrl 
-          : "https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog+Gabriel+Silva";
+        const postDate = formatDate(post.createdAt, post.dateFormatted);
+        const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
+        const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
+        
+        // Build media section (video > image > placeholder)
+        let mediaHtml = '';
+        
+        if (hasVideo) {
+          // Show video embed
+          mediaHtml = `
+            <div class="post-media">
+              <div class="video-container">
+                <iframe 
+                  src="${escapeHtml(post.videoEmbedUrl)}" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="video-badge">
+                🎬 YouTube
+              </div>
+            </div>
+          `;
+        } else if (hasImage) {
+          // Show image
+          mediaHtml = `
+            <div class="post-media">
+              <img 
+                class="post-image" 
+                src="${escapeHtml(post.imageUrl)}" 
+                alt="capa do post: ${escapeHtml(post.title)}" 
+                onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog+Gabriel+Silva'"
+              >
+            </div>
+          `;
+        } else {
+          // Placeholder with gradient
+          mediaHtml = `
+            <div class="post-media">
+              <img 
+                class="post-image" 
+                src="https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog+Gabriel+Silva" 
+                alt="placeholder"
+              >
+            </div>
+          `;
+        }
 
-        const postDate = post.dateFormatted || new Date(post.createdAt).toLocaleDateString('pt-BR', {
-          day: '2-digit', month: 'long', year: 'numeric'
-        });
-
+        // Summary text (first 280 chars)
+        const summary = truncateText(post.content, 280);
+        
         card.innerHTML = `
-          <img class="post-image" src="${imageUrl}" alt="capa do post: ${escapeHtml(post.title)}" onerror="this.src='https://placehold.co/600x400/13131a/7c3aed?text=Imagem+indisponível'">
+          ${mediaHtml}
           <div class="post-content">
             <h2 class="post-title">${escapeHtml(post.title)}</h2>
             <div class="post-date">
               <span>📅</span> ${escapeHtml(postDate)}
             </div>
-            <p class="post-summary">${escapeHtml(post.content.substring(0, 280))}${post.content.length > 280 ? '...' : ''}</p>
+            <p class="post-summary">${escapeHtml(summary)}</p>
+            <a href="#" class="read-more" data-id="${post.id}">Ler artigo completo →</a>
           </div>
         `;
+        
         container.appendChild(card);
       }
+      
+      // Add click handlers for "Ler artigo completo" modals
+      document.querySelectorAll('.read-more').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const postId = link.getAttribute('data-id');
+          const post = postsArray.find(p => p.id === postId);
+          if (post) {
+            showFullPostModal(post);
+          }
+        });
+      });
+      
     }).catch(error => {
       console.error("Erro ao carregar posts:", error);
-      container.innerHTML = `<div class="no-posts">⚠️ Erro ao carregar posts. Verifique conexão com Firebase. <br> <small>${error.message}</small></div>`;
+      container.innerHTML = `<div class="no-posts">⚠️ Erro ao carregar posts. Verifique conexão com Firebase. <br> <small>${escapeHtml(error.message)}</small></div>`;
     });
   }
-
-  // simple helper to avoid XSS
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  
+  // Modal to show full post content
+  function showFullPostModal(post) {
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
+    modal.style.zIndex = '1000';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.padding = '1rem';
+    modal.style.overflowY = 'auto';
+    modal.style.cursor = 'pointer';
+    
+    const modalContent = document.createElement('div');
+    modalContent.style.backgroundColor = '#13131a';
+    modalContent.style.borderRadius = '32px';
+    modalContent.style.maxWidth = '800px';
+    modalContent.style.width = '100%';
+    modalContent.style.maxHeight = '90vh';
+    modalContent.style.overflowY = 'auto';
+    modalContent.style.padding = '2rem';
+    modalContent.style.border = '1px solid #2a2a35';
+    modalContent.style.position = 'relative';
+    modalContent.style.cursor = 'default';
+    
+    const postDate = formatDate(post.createdAt, post.dateFormatted);
+    const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
+    const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
+    
+    // Build media for modal
+    let mediaHtml = '';
+    if (hasVideo) {
+      mediaHtml = `
+        <div style="margin-bottom: 1.5rem; border-radius: 20px; overflow: hidden;">
+          <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+            <iframe 
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+              src="${escapeHtml(post.videoEmbedUrl)}" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      `;
+    } else if (hasImage) {
+      mediaHtml = `
+        <img 
+          src="${escapeHtml(post.imageUrl)}" 
+          alt="${escapeHtml(post.title)}" 
+          style="width: 100%; border-radius: 20px; margin-bottom: 1.5rem; object-fit: cover; max-height: 400px;"
+          onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Imagem+indisponível'"
+        >
+      `;
+    }
+    
+    modalContent.innerHTML = `
+      <button style="
+        position: sticky;
+        top: 0;
+        float: right;
+        background: #2a2a35;
+        border: none;
+        color: #ecedee;
+        font-size: 1.5rem;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        transition: 0.2s;
+      " class="close-modal">✕</button>
+      <div style="clear: both"></div>
+      ${mediaHtml}
+      <h1 style="font-size: 1.8rem; margin-bottom: 1rem; color: #f0f0f5;">${escapeHtml(post.title)}</h1>
+      <div style="font-size: 0.8rem; color: #9b8cbf; margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+        <span>📅 ${escapeHtml(postDate)}</span>
+        ${hasVideo ? '<span>🎬 Vídeo incluído</span>' : ''}
+      </div>
+      <div style="color: #c5c5d2; line-height: 1.7; font-size: 1rem; white-space: pre-wrap;">
+        ${escapeHtml(post.content).replace(/\n/g, '<br>')}
+      </div>
+    `;
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    modal.style.overflow = 'auto';
+    
+    // Close modal when clicking outside or on X
+    const closeBtn = modalContent.querySelector('.close-modal');
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+    
+    // Close on ESC key
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        if (document.body.contains(modal)) {
+          document.body.removeChild(modal);
+          document.removeEventListener('keydown', escHandler);
+        }
+      }
+    };
+    document.addEventListener('keydown', escHandler);
   }
 
-  // initial load
+  // Initial load
   loadPosts();
 </script>
 </body>
