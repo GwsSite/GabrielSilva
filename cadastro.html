@@ -8,8 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- BcryptJS para hash de senhas -->
-  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/bcrypt.min.js"></script>
+  <!-- CryptoJS para hash seguro -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -306,70 +306,93 @@
   </form>
 
   <div class="info-text">
-    <i class="fas fa-shield-alt"></i> Senhas protegidas com bcrypt • reCAPTCHA v2
+    <i class="fas fa-shield-alt"></i> Senhas protegidas com SHA-256 + Salt • reCAPTCHA v2
   </div>
 </div>
 
 <script>
-  // ==================== CONFIGURAÇÃO BCRYPT ====================
-  // Nível de custo do bcrypt (10 é padrão e seguro)
-  const BCRYPT_SALT_ROUNDS = 10;
-
-  // ==================== FUNÇÕES DE HASH ====================
-  async function hashPassword(password) {
-    return new Promise((resolve, reject) => {
-      bcrypt.hash(password, BCRYPT_SALT_ROUNDS, (err, hash) => {
-        if (err) reject(err);
-        else resolve(hash);
-      });
-    });
+  // ==================== FUNÇÕES DE HASH COM CRYPTOJS ====================
+  
+  // Gerar salt aleatório (16 bytes em hex)
+  function generateSalt() {
+    return CryptoJS.lib.WordArray.random(16).toString();
   }
-
-  async function verifyPassword(password, hash) {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(password, hash, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
-      });
-    });
+  
+  // Hash da senha com salt usando SHA-256
+  function hashPassword(password, salt) {
+    const saltedPassword = password + salt;
+    return CryptoJS.SHA256(saltedPassword).toString();
+  }
+  
+  // Verificar senha
+  function verifyPassword(password, salt, hash) {
+    const computedHash = hashPassword(password, salt);
+    return computedHash === hash;
   }
 
   // ==================== USER DATABASE ====================
   function getUsers() { 
-    const users = localStorage.getItem('blog_users_bcrypt');
+    const users = localStorage.getItem('blog_users_secure');
     return users ? JSON.parse(users) : [];
   }
   
   function saveUsers(users) { 
-    localStorage.setItem('blog_users_bcrypt', JSON.stringify(users));
+    localStorage.setItem('blog_users_secure', JSON.stringify(users));
   }
 
-  async function registerUser(name, email, password) {
-    const users = getUsers();
-    if (users.some(u => u.email === email)) return false;
-    
-    const passwordHash = await hashPassword(password);
-    
-    const newUser = { 
-      name, 
-      email, 
-      passwordHash,
-      provider: 'email',
-      createdAt: new Date().toISOString()
-    };
-    
-    users.push(newUser);
-    saveUsers(users);
-    return true;
+  function registerUser(name, email, password) {
+    try {
+      const users = getUsers();
+      
+      // Verificar se email já existe
+      if (users.some(u => u.email === email)) {
+        return { success: false, error: 'email_exists' };
+      }
+      
+      // Gerar salt único para este usuário
+      const salt = generateSalt();
+      const passwordHash = hashPassword(password, salt);
+      
+      const newUser = { 
+        name, 
+        email, 
+        salt,
+        passwordHash,
+        provider: 'email',
+        createdAt: new Date().toISOString()
+      };
+      
+      users.push(newUser);
+      saveUsers(users);
+      return { success: true };
+      
+    } catch (error) {
+      console.error('Erro no registro:', error);
+      return { success: false, error: error.message };
+    }
   }
 
-  async function authenticateUser(email, password) {
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.provider === 'email');
-    if (!user) return null;
-    
-    const isValid = await verifyPassword(password, user.passwordHash);
-    return isValid ? user : null;
+  function authenticateUser(email, password) {
+    try {
+      const users = getUsers();
+      const user = users.find(u => u.email === email && u.provider === 'email');
+      
+      if (!user) {
+        return { success: false, error: 'user_not_found' };
+      }
+      
+      const isValid = verifyPassword(password, user.salt, user.passwordHash);
+      
+      if (isValid) {
+        return { success: true, user };
+      } else {
+        return { success: false, error: 'invalid_password' };
+      }
+      
+    } catch (error) {
+      console.error('Erro na autenticação:', error);
+      return { success: false, error: error.message };
+    }
   }
 
   function redirectToBlog() {
@@ -444,12 +467,18 @@
     showMessage('loginMessage', '⏳ Verificando credenciais...', 'success');
     
     try {
-      const user = await authenticateUser(email, password);
-      if (user) {
+      const result = authenticateUser(email, password);
+      
+      if (result.success) {
         showMessage('loginMessage', '✅ Acesso autorizado! Redirecionando...', 'success');
-        loginSuccess(user.name, user.email);
+        loginSuccess(result.user.name, result.user.email);
       } else {
-        showMessage('loginMessage', '❌ E-mail ou senha incorretos.', 'error');
+        if (result.error === 'user_not_found') {
+          showMessage('loginMessage', '❌ E-mail não encontrado. Crie uma conta primeiro.', 'error');
+        } else {
+          showMessage('loginMessage', '❌ Senha incorreta. Tente novamente.', 'error');
+        }
+        
         captchaLogin = false;
         if (window.grecaptcha) {
           const el = document.querySelector('#loginForm .g-recaptcha');
@@ -464,25 +493,30 @@
   }
 
   // ==================== REGISTRO ====================
-  async function handleRegister(e) {
+  function handleRegister(e) {
     e.preventDefault();
+    
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const pwd = document.getElementById('regPassword').value;
     const confirm = document.getElementById('regConfirmPassword').value;
     
+    // Validações
     if (!name || !email || !pwd || !confirm) {
       showMessage('registerMessage', '❌ Todos os campos são obrigatórios.', 'error');
       return;
     }
+    
     if (pwd.length < 6) {
       showMessage('registerMessage', '⚠️ A senha precisa ter pelo menos 6 caracteres.', 'error');
       return;
     }
+    
     if (pwd !== confirm) {
       showMessage('registerMessage', '❌ As senhas não coincidem.', 'error');
       return;
     }
+    
     if (!captchaRegister) {
       showMessage('registerMessage', '🤖 Complete o reCAPTCHA.', 'error');
       return;
@@ -491,8 +525,9 @@
     showMessage('registerMessage', '🔐 Criando conta segura...', 'success');
     
     try {
-      const success = await registerUser(name, email, pwd);
-      if (success) {
+      const result = registerUser(name, email, pwd);
+      
+      if (result.success) {
         showMessage('registerMessage', '🎉 Conta criada com sucesso!', 'success');
         
         // Limpar formulário
@@ -515,7 +550,12 @@
           showMessage('loginMessage', '✨ Conta criada! Agora faça login.', 'success');
         }, 1500);
       } else {
-        showMessage('registerMessage', '📧 Este e-mail já está cadastrado.', 'error');
+        if (result.error === 'email_exists') {
+          showMessage('registerMessage', '📧 Este e-mail já está cadastrado.', 'error');
+        } else {
+          showMessage('registerMessage', '❌ Erro ao criar conta: ' + result.error, 'error');
+        }
+        
         if (window.grecaptcha) {
           const el = document.querySelector('#registerForm .g-recaptcha');
           if (el) window.grecaptcha.reset();
@@ -525,7 +565,7 @@
       }
     } catch (err) { 
       console.error('Erro no registro:', err);
-      showMessage('registerMessage', '❌ Erro ao criar conta: ' + err.message, 'error');
+      showMessage('registerMessage', '❌ Erro ao criar conta. Tente novamente.', 'error');
     }
   }
 
@@ -561,15 +601,15 @@
   });
 
   // ==================== CRIAR USUÁRIO DEMO ====================
-  window.addEventListener('load', async () => {
+  window.addEventListener('load', () => {
     const users = getUsers();
     if (users.length === 0) {
-      try {
-        await registerUser('Visitante Demo', 'demo@blog.com', '123456');
+      const result = registerUser('Visitante Demo', 'demo@blog.com', '123456');
+      if (result.success) {
         console.log('✅ Usuário demo criado com sucesso!');
         console.log('📝 Credenciais: demo@blog.com / 123456');
-      } catch(e) { 
-        console.error('Erro ao criar demo:', e); 
+      } else {
+        console.error('Erro ao criar demo:', result.error);
       }
     }
     document.getElementById('loginBtn').disabled = true;
