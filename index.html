@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Blog Gabriel Silva | Início</title>
-  <!-- Google Fonts & simple CSS reset -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <title>Gabriel Silva | Blog Profissional</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -15,75 +17,227 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #0a0a0f;
+      background: linear-gradient(135deg, #0a0a0f 0%, #0d0d14 50%, #0f0f18 100%);
       color: #ecedee;
       line-height: 1.5;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1a1a2a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #7c3aed;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a855f7;
     }
 
-    /* header */
-    .blog-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      border-bottom: 1px solid #2a2a35;
-      padding-bottom: 1.5rem;
+    /* Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+      padding: 1rem 2rem;
     }
-    .blog-header h1 {
-      font-size: 2.6rem;
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon i {
+      font-size: 1.5rem;
+      color: white;
+    }
+    .logo-text h2 {
+      font-size: 1.4rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
+      background: linear-gradient(135deg, #c084fc, #a855f7);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.5px;
     }
-    .blog-header p {
-      color: #a1a1b0;
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
+    .logo-text p {
+      font-size: 0.7rem;
+      color: #8b8ca8;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #b8b9d6;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      color: #c084fc;
+    }
+    .nav-links .admin-btn {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+    }
+    .nav-links .admin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
     }
 
-    /* posts grid */
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.15), transparent 70%);
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #c084fc, #a855f7);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #a1a1b0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #c084fc;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #8b8ca8;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+    }
+
+    /* Section Title */
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .section-title h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f0f0f5;
+      border-left: 4px solid #7c3aed;
+      padding-left: 1rem;
+    }
+    .section-title span {
+      color: #a855f7;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .filter-btn {
+      background: #1e1e2a;
+      border: 1px solid #2a2a35;
+      color: #b8b9d6;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.85rem;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: white;
+    }
+
+    /* Posts Grid */
     .posts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
       gap: 2rem;
     }
     .post-card {
       background: #13131a;
-      border-radius: 28px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+      border-radius: 24px;
       overflow: hidden;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       border: 1px solid #2a2a35;
+      cursor: pointer;
+      position: relative;
     }
     .post-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
       border-color: #7c3aed;
-      box-shadow: 0 24px 36px -12px rgba(124, 58, 237, 0.25);
+      box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.3);
     }
     .post-media {
-      width: 100%;
       position: relative;
-      background: #1e1e2a;
+      width: 100%;
+      background: #0a0a0f;
+      overflow: hidden;
     }
     .post-image {
       width: 100%;
-      height: 220px;
+      height: 240px;
       object-fit: cover;
-      display: block;
+      transition: transform 0.5s ease;
+    }
+    .post-card:hover .post-image {
+      transform: scale(1.03);
     }
     .video-container {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      padding-bottom: 56.25%;
       background: #000;
     }
     .video-container iframe {
@@ -94,393 +248,470 @@
       height: 100%;
       border: none;
     }
-    .video-badge {
+    .media-badge {
       position: absolute;
-      top: 12px;
+      bottom: 12px;
       right: 12px;
-      background: rgba(124, 58, 237, 0.9);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      background: rgba(0,0,0,0.7);
       backdrop-filter: blur(4px);
-      z-index: 2;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 6px;
+      color: #c084fc;
+      z-index: 2;
     }
     .post-content {
-      padding: 1.6rem;
-      flex: 1;
+      padding: 1.5rem;
+    }
+    .post-category {
+      display: inline-block;
+      background: rgba(124, 58, 237, 0.15);
+      color: #c084fc;
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
     }
     .post-title {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 700;
       margin-bottom: 0.75rem;
       color: #f0f0f5;
-      line-height: 1.3;
+      line-height: 1.35;
     }
-    .post-date {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #9b8cbf;
-      margin-bottom: 1rem;
+    .post-meta {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+      color: #8b8ca8;
+    }
+    .post-meta i {
+      margin-right: 4px;
+      color: #7c3aed;
     }
     .post-summary {
-      color: #c5c5d2;
-      font-size: 0.95rem;
-      line-height: 1.5;
+      color: #b8b9d6;
+      font-size: 0.9rem;
+      line-height: 1.6;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .read-more {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       margin-top: 1rem;
       color: #c084fc;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .read-more i {
       transition: 0.2s;
     }
     .read-more:hover {
       color: #e9d5ff;
-      transform: translateX(4px);
+      gap: 12px;
     }
+
+    /* Empty State */
     .no-posts {
       text-align: center;
-      padding: 3rem;
+      padding: 4rem;
       background: #13131a;
       border-radius: 2rem;
       color: #a1a1b0;
-      font-weight: 500;
       border: 1px solid #2a2a35;
     }
-    footer {
-      margin-top: 4rem;
-      text-align: center;
-      border-top: 1px solid #2a2a35;
-      padding-top: 2rem;
-      color: #7a7a8c;
-      font-size: 0.85rem;
+    .no-posts i {
+      font-size: 3rem;
+      color: #7c3aed;
+      margin-bottom: 1rem;
+      opacity: 0.5;
     }
     .loading {
       text-align: center;
-      padding: 3rem;
-      font-weight: 500;
-      color: #9b8cbf;
+      padding: 4rem;
+      color: #c084fc;
     }
-    @media (max-width: 640px) {
-      .container { padding: 1.5rem; }
-      .post-title { font-size: 1.3rem; }
+    .loading i {
+      font-size: 2rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    footer {
+      background: #0d0d14;
+      border-top: 1px solid #2a2a35;
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer-content {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .social-links a {
+      color: #8b8ca8;
+      font-size: 1.3rem;
+      transition: 0.2s;
+    }
+    .social-links a:hover {
+      color: #c084fc;
+      transform: translateY(-3px);
+    }
+    footer p {
+      color: #6a6a80;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.2rem; }
       .posts-grid { grid-template-columns: 1fr; }
+      .nav-container { flex-direction: column; text-align: center; }
+      .section-title { flex-direction: column; }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="blog-header">
-    <h1>📖 Blog Gabriel Silva</h1>
-    <p>Ideias, tecnologia e criatividade — direto da fonte.</p>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-feather-alt"></i>
+        </div>
+        <div class="logo-text">
+          <h2>Gabriel Silva</h2>
+          <p>blog & insights</p>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#"><i class="fas fa-home"></i> Início</a>
+        <a href="#" id="showAllBtn"><i class="fas fa-newspaper"></i> Artigos</a>
+        <a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i> Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Explorando ideias,<br>criando conexões</h1>
+    <p>Artigos sobre tecnologia, criatividade e desenvolvimento pessoal</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-number" id="postCount">0</div>
+        <div class="stat-label">Artigos Publicados</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><i class="fas fa-video"></i> +</div>
+        <div class="stat-label">Conteúdo em Vídeo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="section-title">
+      <h2>Últimas <span>publicações</span></h2>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Vídeos</button>
+        <button class="filter-btn" data-filter="text"><i class="fas fa-file-alt"></i> Artigos</button>
+      </div>
+    </div>
+    <div id="postsContainer" class="posts-grid">
+      <div class="loading"><i class="fas fa-spinner"></i> Carregando conteúdo...</div>
+    </div>
   </div>
 
-  <main>
-    <div id="postsContainer" class="posts-grid">
-      <div class="loading">📡 Carregando artigos...</div>
-    </div>
-  </main>
+  <!-- Footer -->
   <footer>
-    <p>© 2025 Blog Gabriel Silva — Todos os direitos reservados.</p>
+    <div class="footer-content">
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+      <p>© 2025 Gabriel Silva — Todos os direitos reservados. Feito com <i class="fas fa-heart" style="color: #c084fc;"></i></p>
+    </div>
   </footer>
-</div>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
-<script>
-  // Firebase configuration (provided by user)
-  const firebaseConfig = {
-    apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
-    authDomain: "fire-auth-2ca37.firebaseapp.com",
-    databaseURL: "https://fire-auth-2ca37-default-rtdb.firebaseio.com",
-    projectId: "fire-auth-2ca37",
-    storageBucket: "fire-auth-2ca37.firebasestorage.app",
-    messagingSenderId: "1047158509788",
-    appId: "1:1047158509788:web:058bb4376a4f14ef3ee419",
-    measurementId: "G-520K5H9Z1T"
-  };
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
+      authDomain: "fire-auth-2ca37.firebaseapp.com",
+      databaseURL: "https://fire-auth-2ca37-default-rtdb.firebaseio.com",
+      projectId: "fire-auth-2ca37",
+      storageBucket: "fire-auth-2ca37.firebasestorage.app",
+      messagingSenderId: "1047158509788",
+      appId: "1:1047158509788:web:058bb4376a4f14ef3ee419",
+      measurementId: "G-520K5H9Z1T"
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-  const postsRef = database.ref('blog_posts'); // reference to store posts
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const postsRef = database.ref('blog_posts');
 
-  // Helper to escape HTML
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
+    let allPosts = [];
+    let currentFilter = 'all';
 
-  // Helper to format date nicely
-  function formatDate(timestamp, formattedDate) {
-    if (formattedDate) return formattedDate;
-    if (timestamp) {
-      return new Date(timestamp).toLocaleDateString('pt-BR', {
-        day: '2-digit', month: 'long', year: 'numeric'
+    // Helper functions
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
       });
     }
-    return 'Data desconhecida';
-  }
 
-  // Helper to truncate text
-  function truncateText(text, maxLength) {
-    if (!text) return '';
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  }
+    function formatDate(timestamp, formattedDate) {
+      if (formattedDate) return formattedDate;
+      if (timestamp) {
+        return new Date(timestamp).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: 'long', year: 'numeric'
+        });
+      }
+      return 'Data desconhecida';
+    }
 
-  // Load and display posts (ordered by date descending)
-  function loadPosts() {
-    const container = document.getElementById('postsContainer');
-    container.innerHTML = '<div class="loading">📚 Buscando publicações...</div>';
+    function truncateText(text, maxLength) {
+      if (!text) return '';
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
 
-    postsRef.orderByChild('createdAt').once('value', (snapshot) => {
-      const postsData = snapshot.val();
-      container.innerHTML = '';
+    // Show full post modal
+    function showFullPostModal(post) {
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.97)';
+      modal.style.zIndex = '1000';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.padding = '1rem';
+      modal.style.overflowY = 'auto';
+      modal.style.cursor = 'pointer';
 
-      if (!postsData) {
-        container.innerHTML = '<div class="no-posts">✨ Nenhum post publicado ainda. Volte em breve!</div>';
+      const modalContent = document.createElement('div');
+      modalContent.style.backgroundColor = '#13131a';
+      modalContent.style.borderRadius = '28px';
+      modalContent.style.maxWidth = '800px';
+      modalContent.style.width = '100%';
+      modalContent.style.maxHeight = '90vh';
+      modalContent.style.overflowY = 'auto';
+      modalContent.style.padding = '2rem';
+      modalContent.style.border = '1px solid #7c3aed';
+      modalContent.style.position = 'relative';
+      modalContent.style.cursor = 'default';
+
+      const postDate = formatDate(post.createdAt, post.dateFormatted);
+      const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
+      const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
+
+      let mediaHtml = '';
+      if (hasVideo) {
+        mediaHtml = `
+          <div style="margin-bottom: 1.5rem; border-radius: 20px; overflow: hidden;">
+            <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+              <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                src="${escapeHtml(post.videoEmbedUrl)}" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+            </div>
+          </div>
+        `;
+      } else if (hasImage) {
+        mediaHtml = `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" style="width: 100%; border-radius: 20px; margin-bottom: 1.5rem;" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Imagem'">`;
+      }
+
+      modalContent.innerHTML = `
+        <button style="position: sticky; top: 0; float: right; background: #2a2a35; border: none; color: white; font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" class="close-modal">✕</button>
+        <div style="clear: both"></div>
+        ${mediaHtml}
+        <h1 style="font-size: 1.8rem; margin-bottom: 1rem; color: #f0f0f5;">${escapeHtml(post.title)}</h1>
+        <div style="font-size: 0.8rem; color: #9b8cbf; margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+          <span><i class="far fa-calendar-alt"></i> ${escapeHtml(postDate)}</span>
+          ${hasVideo ? '<span><i class="fab fa-youtube"></i> Vídeo incorporado</span>' : ''}
+        </div>
+        <div style="color: #c5c5d2; line-height: 1.8; font-size: 1rem; white-space: pre-wrap;">
+          ${escapeHtml(post.content).replace(/\n/g, '<br>')}
+        </div>
+      `;
+
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+
+      const closeBtn = modalContent.querySelector('.close-modal');
+      closeBtn.addEventListener('click', () => document.body.removeChild(modal));
+      modal.addEventListener('click', (e) => { if (e.target === modal) document.body.removeChild(modal); });
+      document.addEventListener('keydown', function escHandler(e) {
+        if (e.key === 'Escape') {
+          if (document.body.contains(modal)) document.body.removeChild(modal);
+          document.removeEventListener('keydown', escHandler);
+        }
+      });
+    }
+
+    // Render posts based on filter
+    function renderPosts() {
+      const container = document.getElementById('postsContainer');
+      let filteredPosts = allPosts;
+      
+      if (currentFilter === 'video') {
+        filteredPosts = allPosts.filter(p => p.videoUrl && p.videoUrl.trim() !== '');
+      } else if (currentFilter === 'text') {
+        filteredPosts = allPosts.filter(p => !p.videoUrl || p.videoUrl.trim() === '');
+      }
+
+      if (filteredPosts.length === 0) {
+        container.innerHTML = `<div class="no-posts"><i class="fas fa-inbox"></i><br>Nenhum post encontrado nesta categoria.</div>`;
+        document.getElementById('postCount').innerText = allPosts.length;
         return;
       }
 
-      // Convert object to array and sort by timestamp desc (newest first)
-      const postsArray = Object.keys(postsData).map(key => ({
-        id: key,
-        ...postsData[key]
-      })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-      for (const post of postsArray) {
-        const card = document.createElement('article');
+      container.innerHTML = '';
+      for (const post of filteredPosts) {
+        const card = document.createElement('div');
         card.className = 'post-card';
-
+        
         const postDate = formatDate(post.createdAt, post.dateFormatted);
         const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
         const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
+        const summary = truncateText(post.content, 200);
         
-        // Build media section (video > image > placeholder)
         let mediaHtml = '';
-        
         if (hasVideo) {
-          // Show video embed
           mediaHtml = `
             <div class="post-media">
               <div class="video-container">
-                <iframe 
-                  src="${escapeHtml(post.videoEmbedUrl)}" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen>
-                </iframe>
+                <iframe src="${escapeHtml(post.videoEmbedUrl)}" frameborder="0" allowfullscreen></iframe>
               </div>
-              <div class="video-badge">
-                🎬 YouTube
-              </div>
-            </div>
-          `;
-        } else if (hasImage) {
-          // Show image
-          mediaHtml = `
-            <div class="post-media">
-              <img 
-                class="post-image" 
-                src="${escapeHtml(post.imageUrl)}" 
-                alt="capa do post: ${escapeHtml(post.title)}" 
-                onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog+Gabriel+Silva'"
-              >
+              <div class="media-badge"><i class="fab fa-youtube"></i> Vídeo</div>
             </div>
           `;
         } else {
-          // Placeholder with gradient
+          const imgSrc = hasImage ? post.imageUrl : 'https://placehold.co/600x400/1e1e2a/7c3aed?text=Gabriel+Silva';
           mediaHtml = `
             <div class="post-media">
-              <img 
-                class="post-image" 
-                src="https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog+Gabriel+Silva" 
-                alt="placeholder"
-              >
+              <img class="post-image" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(post.title)}" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog'">
             </div>
           `;
         }
-
-        // Summary text (first 280 chars)
-        const summary = truncateText(post.content, 280);
         
         card.innerHTML = `
           ${mediaHtml}
           <div class="post-content">
-            <h2 class="post-title">${escapeHtml(post.title)}</h2>
-            <div class="post-date">
-              <span>📅</span> ${escapeHtml(postDate)}
+            <span class="post-category"><i class="fas ${hasVideo ? 'fa-video' : 'fa-pen-fancy'}"></i> ${hasVideo ? 'Vídeo' : 'Artigo'}</span>
+            <h3 class="post-title">${escapeHtml(post.title)}</h3>
+            <div class="post-meta">
+              <span><i class="far fa-calendar-alt"></i> ${escapeHtml(postDate)}</span>
+              <span><i class="far fa-clock"></i> ${Math.ceil(post.content.length / 500)} min leitura</span>
             </div>
             <p class="post-summary">${escapeHtml(summary)}</p>
-            <a href="#" class="read-more" data-id="${post.id}">Ler artigo completo →</a>
+            <a href="#" class="read-more" data-id="${post.id}">Ler completo <i class="fas fa-arrow-right"></i></a>
           </div>
         `;
         
         container.appendChild(card);
       }
       
-      // Add click handlers for "Ler artigo completo" modals
+      document.getElementById('postCount').innerText = allPosts.length;
+      
+      // Add click handlers
       document.querySelectorAll('.read-more').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const postId = link.getAttribute('data-id');
-          const post = postsArray.find(p => p.id === postId);
-          if (post) {
-            showFullPostModal(post);
-          }
+          const post = allPosts.find(p => p.id === postId);
+          if (post) showFullPostModal(post);
         });
       });
       
-    }).catch(error => {
-      console.error("Erro ao carregar posts:", error);
-      container.innerHTML = `<div class="no-posts">⚠️ Erro ao carregar posts. Verifique conexão com Firebase. <br> <small>${escapeHtml(error.message)}</small></div>`;
-    });
-  }
-  
-  // Modal to show full post content
-  function showFullPostModal(post) {
-    // Create modal overlay
-    const modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
-    modal.style.zIndex = '1000';
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.style.padding = '1rem';
-    modal.style.overflowY = 'auto';
-    modal.style.cursor = 'pointer';
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.backgroundColor = '#13131a';
-    modalContent.style.borderRadius = '32px';
-    modalContent.style.maxWidth = '800px';
-    modalContent.style.width = '100%';
-    modalContent.style.maxHeight = '90vh';
-    modalContent.style.overflowY = 'auto';
-    modalContent.style.padding = '2rem';
-    modalContent.style.border = '1px solid #2a2a35';
-    modalContent.style.position = 'relative';
-    modalContent.style.cursor = 'default';
-    
-    const postDate = formatDate(post.createdAt, post.dateFormatted);
-    const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
-    const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
-    
-    // Build media for modal
-    let mediaHtml = '';
-    if (hasVideo) {
-      mediaHtml = `
-        <div style="margin-bottom: 1.5rem; border-radius: 20px; overflow: hidden;">
-          <div style="position: relative; padding-bottom: 56.25%; height: 0;">
-            <iframe 
-              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-              src="${escapeHtml(post.videoEmbedUrl)}" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      `;
-    } else if (hasImage) {
-      mediaHtml = `
-        <img 
-          src="${escapeHtml(post.imageUrl)}" 
-          alt="${escapeHtml(post.title)}" 
-          style="width: 100%; border-radius: 20px; margin-bottom: 1.5rem; object-fit: cover; max-height: 400px;"
-          onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Imagem+indisponível'"
-        >
-      `;
+      document.querySelectorAll('.post-card').forEach((card, idx) => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.read-more')) return;
+          const post = filteredPosts[idx];
+          if (post) showFullPostModal(post);
+        });
+      });
     }
-    
-    modalContent.innerHTML = `
-      <button style="
-        position: sticky;
-        top: 0;
-        float: right;
-        background: #2a2a35;
-        border: none;
-        color: #ecedee;
-        font-size: 1.5rem;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
-        transition: 0.2s;
-      " class="close-modal">✕</button>
-      <div style="clear: both"></div>
-      ${mediaHtml}
-      <h1 style="font-size: 1.8rem; margin-bottom: 1rem; color: #f0f0f5;">${escapeHtml(post.title)}</h1>
-      <div style="font-size: 0.8rem; color: #9b8cbf; margin-bottom: 1.5rem; display: flex; gap: 1rem;">
-        <span>📅 ${escapeHtml(postDate)}</span>
-        ${hasVideo ? '<span>🎬 Vídeo incluído</span>' : ''}
-      </div>
-      <div style="color: #c5c5d2; line-height: 1.7; font-size: 1rem; white-space: pre-wrap;">
-        ${escapeHtml(post.content).replace(/\n/g, '<br>')}
-      </div>
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    modal.style.overflow = 'auto';
-    
-    // Close modal when clicking outside or on X
-    const closeBtn = modalContent.querySelector('.close-modal');
-    closeBtn.addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal);
-      }
-    });
-    
-    // Close on ESC key
-    const escHandler = (e) => {
-      if (e.key === 'Escape') {
-        if (document.body.contains(modal)) {
-          document.body.removeChild(modal);
-          document.removeEventListener('keydown', escHandler);
-        }
-      }
-    };
-    document.addEventListener('keydown', escHandler);
-  }
 
-  // Initial load
-  loadPosts();
-</script>
+    // Load posts from Firebase
+    function loadPosts() {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Carregando conteúdo...</div>';
+      
+      postsRef.orderByChild('createdAt').once('value', (snapshot) => {
+        const postsData = snapshot.val();
+        if (!postsData) {
+          allPosts = [];
+          renderPosts();
+          return;
+        }
+        
+        allPosts = Object.keys(postsData).map(key => ({
+          id: key,
+          ...postsData[key]
+        })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        
+        renderPosts();
+      }).catch(error => {
+        console.error(error);
+        container.innerHTML = `<div class="no-posts"><i class="fas fa-exclamation-triangle"></i><br>Erro ao carregar posts: ${escapeHtml(error.message)}</div>`;
+      });
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        renderPosts();
+      });
+    });
+
+    document.getElementById('showAllBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+      currentFilter = 'all';
+      renderPosts();
+    });
+
+    loadPosts();
+  </script>
 </body>
 </html>
