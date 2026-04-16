@@ -22,7 +22,6 @@
       line-height: 1.5;
     }
 
-    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -37,7 +36,7 @@
       background: #a855f7;
     }
 
-    /* Navigation Bar */
+    /* Navigation */
     .navbar {
       position: sticky;
       top: 0;
@@ -114,10 +113,9 @@
     .login-btn-header:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-      color: white !important;
     }
 
-    /* Hero Section */
+    /* Hero */
     .hero {
       text-align: center;
       padding: 4rem 2rem 3rem;
@@ -158,14 +156,13 @@
       color: #8b8ca8;
     }
 
-    /* Container */
     .container {
       max-width: 1280px;
       margin: 0 auto;
       padding: 2rem 2rem 4rem;
     }
 
-    /* Section Title */
+    /* Filter Tabs */
     .section-title {
       display: flex;
       align-items: baseline;
@@ -187,16 +184,18 @@
     .filter-buttons {
       display: flex;
       gap: 0.8rem;
+      flex-wrap: wrap;
     }
     .filter-btn {
       background: #1e1e2a;
       border: 1px solid #2a2a35;
       color: #b8b9d6;
-      padding: 0.4rem 1rem;
+      padding: 0.5rem 1.2rem;
       border-radius: 40px;
       cursor: pointer;
       transition: 0.2s;
       font-size: 0.85rem;
+      font-weight: 500;
     }
     .filter-btn.active, .filter-btn:hover {
       background: #7c3aed;
@@ -204,10 +203,10 @@
       color: white;
     }
 
-    /* Posts Grid */
+    /* Grid Cards */
     .posts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 2rem;
     }
     .post-card {
@@ -217,12 +216,14 @@
       transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       border: 1px solid #2a2a35;
       cursor: pointer;
-      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     .post-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       border-color: #7c3aed;
-      box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.3);
+      box-shadow: 0 20px 35px -12px rgba(124, 58, 237, 0.3);
     }
     .post-media {
       position: relative;
@@ -232,20 +233,20 @@
     }
     .post-image {
       width: 100%;
-      height: 240px;
+      height: 220px;
       object-fit: cover;
-      transition: transform 0.5s ease;
+      transition: transform 0.4s ease;
     }
     .post-card:hover .post-image {
       transform: scale(1.03);
     }
-    .video-container {
+    .video-container, .playlist-container {
       position: relative;
       width: 100%;
       padding-bottom: 56.25%;
       background: #000;
     }
-    .video-container iframe {
+    .video-container iframe, .playlist-container iframe {
       position: absolute;
       top: 0;
       left: 0;
@@ -257,9 +258,9 @@
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      padding: 6px 12px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(5px);
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 0.7rem;
       font-weight: 600;
@@ -271,6 +272,9 @@
     }
     .post-content {
       padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .post-category {
       display: inline-block;
@@ -280,6 +284,7 @@
       padding: 4px 12px;
       border-radius: 20px;
       margin-bottom: 1rem;
+      width: fit-content;
     }
     .post-title {
       font-size: 1.35rem;
@@ -297,7 +302,7 @@
       color: #8b8ca8;
     }
     .post-meta i {
-      margin-right: 4px;
+      margin-right: 5px;
       color: #7c3aed;
     }
     .post-summary {
@@ -308,12 +313,13 @@
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      margin-bottom: 1rem;
     }
     .read-more {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 1rem;
+      margin-top: auto;
       color: #c084fc;
       text-decoration: none;
       font-weight: 600;
@@ -327,8 +333,6 @@
       color: #e9d5ff;
       gap: 12px;
     }
-
-    /* Empty State */
     .no-posts {
       text-align: center;
       padding: 4rem;
@@ -357,7 +361,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Footer */
     footer {
       background: #0d0d14;
       border-top: 1px solid #2a2a35;
@@ -389,84 +392,64 @@
     }
 
     @media (max-width: 768px) {
-      .hero h1 { font-size: 2.2rem; }
+      .hero h1 { font-size: 2rem; }
       .posts-grid { grid-template-columns: 1fr; }
       .nav-container { flex-direction: column; text-align: center; }
       .section-title { flex-direction: column; }
+      .filter-buttons { justify-content: center; }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
       <div class="logo">
-        <div class="logo-icon">
-          <i class="fas fa-feather-alt"></i>
-        </div>
-        <div class="logo-text">
-          <h2>Gabriel Silva</h2>
-          <p>blog & insights</p>
-        </div>
+        <div class="logo-icon"><i class="fas fa-feather-alt"></i></div>
+        <div class="logo-text"><h2>Gabriel Silva</h2><p>blog & insights</p></div>
       </div>
       <div class="nav-links">
         <a href="#"><i class="fas fa-home"></i> Início</a>
         <a href="#" id="showAllBtn"><i class="fas fa-newspaper"></i> Artigos</a>
-        <a href="https://gwssite.github.io/GabrielSilva/cadastro" class="login-btn-header">
-          <i class="fas fa-sign-in-alt"></i> Entrar
-        </a>
+        <a href="https://gwssite.github.io/GabrielSilva/cadastro" class="login-btn-header"><i class="fas fa-sign-in-alt"></i> Entrar</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero">
     <h1>Explorando ideias,<br>criando conexões</h1>
-    <p>Artigos sobre tecnologia, criatividade e desenvolvimento pessoal</p>
+    <p>Artigos, vídeos e playlists sobre tecnologia, criatividade e desenvolvimento pessoal</p>
     <div class="hero-stats">
-      <div class="stat-item">
-        <div class="stat-number" id="postCount">0</div>
-        <div class="stat-label">Artigos Publicados</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number"><i class="fas fa-video"></i> +</div>
-        <div class="stat-label">Conteúdo em Vídeo</div>
-      </div>
+      <div class="stat-item"><div class="stat-number" id="postCount">0</div><div class="stat-label">Publicações</div></div>
+      <div class="stat-item"><div class="stat-number" id="videoCount">0</div><div class="stat-label">Vídeos & Playlists</div></div>
     </div>
   </section>
 
-  <!-- Main Content -->
   <div class="container">
     <div class="section-title">
       <h2>Últimas <span>publicações</span></h2>
       <div class="filter-buttons">
         <button class="filter-btn active" data-filter="all">Todos</button>
         <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Vídeos</button>
+        <button class="filter-btn" data-filter="playlist"><i class="fas fa-list"></i> Playlists</button>
         <button class="filter-btn" data-filter="text"><i class="fas fa-file-alt"></i> Artigos</button>
       </div>
     </div>
-    <div id="postsContainer" class="posts-grid">
-      <div class="loading"><i class="fas fa-spinner"></i> Carregando conteúdo...</div>
-    </div>
+    <div id="postsContainer" class="posts-grid"><div class="loading"><i class="fas fa-spinner"></i> Carregando conteúdo...</div></div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-content">
       <div class="social-links">
-        <a href="https://www.youtube.com/@MultiversoDosApps" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.youtube.com/@MultiversoDosApps" target="_blank"><i class="fab fa-youtube"></i></a>
         <a href="#"><i class="fab fa-instagram"></i></a>
       </div>
       <p>© 2025 Gabriel Silva — Todos os direitos reservados. Feito com <i class="fas fa-heart" style="color: #c084fc;"></i></p>
     </div>
   </footer>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-
   <script>
-    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyChOWLpFaRsy79Fn8QBwWew33huheHGMGE",
       authDomain: "fire-auth-2ca37.firebaseapp.com",
@@ -477,246 +460,129 @@
       appId: "1:1047158509788:web:058bb4376a4f14ef3ee419",
       measurementId: "G-520K5H9Z1T"
     };
-
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const postsRef = database.ref('blog_posts');
+    const dbRef = firebase.database().ref('blog_posts');
 
     let allPosts = [];
     let currentFilter = 'all';
 
-    // Helper functions
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+    function formatDate(ts, fmt) { return fmt || (ts ? new Date(ts).toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' }) : 'Data desconhecida'); }
+    function truncate(txt, max) { return txt?.length > max ? txt.substring(0, max)+'...' : txt || ''; }
+
+    function getYouTubeEmbedUrl(url) {
+      if (!url) return null;
+      const patterns = [/youtube\.com\/watch\?v=([^&]+)/i, /youtu\.be\/([^?]+)/i, /youtube\.com\/embed\/([^?]+)/i, /youtube\.com\/shorts\/([^?]+)/i];
+      for (let p of patterns) { let m = url.match(p); if (m && m[1]) return `https://www.youtube.com/embed/${m[1]}`; }
+      return null;
     }
 
-    function formatDate(timestamp, formattedDate) {
-      if (formattedDate) return formattedDate;
-      if (timestamp) {
-        return new Date(timestamp).toLocaleDateString('pt-BR', {
-          day: '2-digit', month: 'long', year: 'numeric'
-        });
-      }
-      return 'Data desconhecida';
+    function getPlaylistEmbedUrl(url) {
+      if (!url) return null;
+      let match = url.match(/[&?]list=([^&]+)/i);
+      if (match && match[1]) return `https://www.youtube.com/embed/videoseries?list=${match[1]}`;
+      match = url.match(/youtube\.com\/playlist\?list=([^&]+)/i);
+      if (match && match[1]) return `https://www.youtube.com/embed/videoseries?list=${match[1]}`;
+      return null;
     }
 
-    function truncateText(text, maxLength) {
-      if (!text) return '';
-      if (text.length <= maxLength) return text;
-      return text.substring(0, maxLength) + '...';
-    }
-
-    // Show full post modal
-    function showFullPostModal(post) {
+    function showFullModal(post) {
       const modal = document.createElement('div');
-      modal.style.position = 'fixed';
-      modal.style.top = '0';
-      modal.style.left = '0';
-      modal.style.width = '100%';
-      modal.style.height = '100%';
-      modal.style.backgroundColor = 'rgba(0,0,0,0.97)';
-      modal.style.zIndex = '1000';
-      modal.style.display = 'flex';
-      modal.style.alignItems = 'center';
-      modal.style.justifyContent = 'center';
-      modal.style.padding = '1rem';
-      modal.style.overflowY = 'auto';
-      modal.style.cursor = 'pointer';
-
-      const modalContent = document.createElement('div');
-      modalContent.style.backgroundColor = '#13131a';
-      modalContent.style.borderRadius = '28px';
-      modalContent.style.maxWidth = '800px';
-      modalContent.style.width = '100%';
-      modalContent.style.maxHeight = '90vh';
-      modalContent.style.overflowY = 'auto';
-      modalContent.style.padding = '2rem';
-      modalContent.style.border = '1px solid #7c3aed';
-      modalContent.style.position = 'relative';
-      modalContent.style.cursor = 'default';
-
-      const postDate = formatDate(post.createdAt, post.dateFormatted);
-      const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
-      const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
-
-      let mediaHtml = '';
-      if (hasVideo) {
-        mediaHtml = `
-          <div style="margin-bottom: 1.5rem; border-radius: 20px; overflow: hidden;">
-            <div style="position: relative; padding-bottom: 56.25%; height: 0;">
-              <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
-                src="${escapeHtml(post.videoEmbedUrl)}" frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen></iframe>
-            </div>
-          </div>
-        `;
-      } else if (hasImage) {
-        mediaHtml = `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" style="width: 100%; border-radius: 20px; margin-bottom: 1.5rem;" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Imagem'">`;
-      }
-
-      modalContent.innerHTML = `
-        <button style="position: sticky; top: 0; float: right; background: #2a2a35; border: none; color: white; font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" class="close-modal">✕</button>
-        <div style="clear: both"></div>
-        ${mediaHtml}
-        <h1 style="font-size: 1.8rem; margin-bottom: 1rem; color: #f0f0f5;">${escapeHtml(post.title)}</h1>
-        <div style="font-size: 0.8rem; color: #9b8cbf; margin-bottom: 1.5rem; display: flex; gap: 1rem;">
-          <span><i class="far fa-calendar-alt"></i> ${escapeHtml(postDate)}</span>
-          ${hasVideo ? '<span><i class="fab fa-youtube"></i> Vídeo incorporado</span>' : ''}
-        </div>
-        <div style="color: #c5c5d2; line-height: 1.8; font-size: 1rem; white-space: pre-wrap;">
-          ${escapeHtml(post.content).replace(/\n/g, '<br>')}
-        </div>
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.97);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;cursor:pointer';
+      const content = document.createElement('div');
+      content.style.cssText = 'background:#13131a;border-radius:28px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;padding:2rem;border:1px solid #7c3aed;position:relative;cursor:default';
+      const date = formatDate(post.createdAt, post.dateFormatted);
+      const isVideo = post.type === 'video' && post.videoUrl;
+      const isPlaylist = post.type === 'playlist' && post.playlistUrl;
+      const hasImage = post.imageUrl && !isVideo && !isPlaylist;
+      let media = '';
+      if (isVideo && post.videoEmbedUrl) media = `<div style="margin-bottom:1.5rem;border-radius:20px;overflow:hidden"><div style="position:relative;padding-bottom:56.25%"><iframe src="${escapeHtml(post.videoEmbedUrl)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen></iframe></div></div>`;
+      else if (isPlaylist && post.playlistEmbedUrl) media = `<div style="margin-bottom:1.5rem;border-radius:20px;overflow:hidden"><div style="position:relative;padding-bottom:56.25%"><iframe src="${escapeHtml(post.playlistEmbedUrl)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen></iframe></div></div>`;
+      else if (hasImage) media = `<img src="${escapeHtml(post.imageUrl)}" style="width:100%;border-radius:20px;margin-bottom:1.5rem" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Imagem'">`;
+      content.innerHTML = `
+        <button style="position:sticky;top:0;float:right;background:#2a2a35;border:none;color:white;font-size:1.5rem;cursor:pointer;width:40px;height:40px;border-radius:50%" class="close-modal">✕</button><div style="clear:both"></div>
+        ${media}
+        <h1 style="font-size:1.8rem;margin-bottom:1rem">${escapeHtml(post.title)}</h1>
+        <div style="font-size:0.8rem;color:#9b8cbf;margin-bottom:1.5rem;display:flex;gap:1rem"><span><i class="far fa-calendar-alt"></i> ${escapeHtml(date)}</span>${isVideo?'<span><i class="fab fa-youtube"></i> Vídeo</span>':''}${isPlaylist?'<span><i class="fas fa-list"></i> Playlist</span>':''}</div>
+        <div style="color:#c5c5d2;line-height:1.8;white-space:pre-wrap">${escapeHtml(post.content).replace(/\n/g,'<br>')}</div>
       `;
-
-      modal.appendChild(modalContent);
-      document.body.appendChild(modal);
-
-      const closeBtn = modalContent.querySelector('.close-modal');
-      closeBtn.addEventListener('click', () => document.body.removeChild(modal));
-      modal.addEventListener('click', (e) => { if (e.target === modal) document.body.removeChild(modal); });
-      document.addEventListener('keydown', function escHandler(e) {
-        if (e.key === 'Escape') {
-          if (document.body.contains(modal)) document.body.removeChild(modal);
-          document.removeEventListener('keydown', escHandler);
-        }
-      });
+      modal.appendChild(content); document.body.appendChild(modal);
+      content.querySelector('.close-modal').onclick = () => modal.remove();
+      modal.onclick = (e) => { if(e.target===modal) modal.remove(); };
+      document.addEventListener('keydown', function esc(e) { if(e.key==='Escape'){ modal.remove(); document.removeEventListener('keydown',esc); } });
     }
 
-    // Render posts based on filter
     function renderPosts() {
       const container = document.getElementById('postsContainer');
-      let filteredPosts = allPosts;
+      let filtered = allPosts;
+      if (currentFilter === 'video') filtered = allPosts.filter(p => p.type === 'video');
+      else if (currentFilter === 'playlist') filtered = allPosts.filter(p => p.type === 'playlist');
+      else if (currentFilter === 'text') filtered = allPosts.filter(p => p.type === 'text' || (!p.type && !p.videoUrl && !p.playlistUrl));
       
-      if (currentFilter === 'video') {
-        filteredPosts = allPosts.filter(p => p.videoUrl && p.videoUrl.trim() !== '');
-      } else if (currentFilter === 'text') {
-        filteredPosts = allPosts.filter(p => !p.videoUrl || p.videoUrl.trim() === '');
-      }
-
-      if (filteredPosts.length === 0) {
-        container.innerHTML = `<div class="no-posts"><i class="fas fa-inbox"></i><br>Nenhum post encontrado nesta categoria.</div>`;
-        document.getElementById('postCount').innerText = allPosts.length;
-        return;
-      }
-
+      const videoCount = allPosts.filter(p => p.type === 'video').length;
+      const playlistCount = allPosts.filter(p => p.type === 'playlist').length;
+      document.getElementById('postCount').innerText = allPosts.length;
+      document.getElementById('videoCount').innerText = videoCount + playlistCount;
+      
+      if (!filtered.length) { container.innerHTML = `<div class="no-posts"><i class="fas fa-inbox"></i><br>Nenhum post encontrado.</div>`; return; }
       container.innerHTML = '';
-      for (const post of filteredPosts) {
-        const card = document.createElement('div');
-        card.className = 'post-card';
-        
-        const postDate = formatDate(post.createdAt, post.dateFormatted);
-        const hasVideo = post.videoUrl && post.videoUrl.trim() !== '' && post.videoEmbedUrl;
-        const hasImage = post.imageUrl && post.imageUrl.trim() !== '';
-        const summary = truncateText(post.content, 200);
-        
-        let mediaHtml = '';
-        if (hasVideo) {
-          mediaHtml = `
-            <div class="post-media">
-              <div class="video-container">
-                <iframe src="${escapeHtml(post.videoEmbedUrl)}" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <div class="media-badge"><i class="fab fa-youtube"></i> Vídeo</div>
-            </div>
-          `;
+      for (let post of filtered) {
+        const card = document.createElement('div'); card.className = 'post-card';
+        const date = formatDate(post.createdAt, post.dateFormatted);
+        const isVideo = post.type === 'video';
+        const isPlaylist = post.type === 'playlist';
+        const isText = !isVideo && !isPlaylist;
+        let mediaHtml = '', badgeHtml = '';
+        if (isVideo && post.videoEmbedUrl) {
+          mediaHtml = `<div class="post-media"><div class="video-container"><iframe src="${escapeHtml(post.videoEmbedUrl)}" allowfullscreen></iframe></div><div class="media-badge"><i class="fab fa-youtube"></i> Vídeo</div></div>`;
+        } else if (isPlaylist && post.playlistEmbedUrl) {
+          mediaHtml = `<div class="post-media"><div class="playlist-container"><iframe src="${escapeHtml(post.playlistEmbedUrl)}" allowfullscreen></iframe></div><div class="media-badge"><i class="fas fa-list"></i> Playlist</div></div>`;
         } else {
-          const imgSrc = hasImage ? post.imageUrl : 'https://placehold.co/600x400/1e1e2a/7c3aed?text=Gabriel+Silva';
-          mediaHtml = `
-            <div class="post-media">
-              <img class="post-image" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(post.title)}" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog'">
-            </div>
-          `;
+          const imgSrc = post.imageUrl || 'https://placehold.co/600x400/1e1e2a/7c3aed?text=Gabriel+Silva';
+          mediaHtml = `<div class="post-media"><img class="post-image" src="${escapeHtml(imgSrc)}" onerror="this.src='https://placehold.co/600x400/1e1e2a/7c3aed?text=Blog'"></div>`;
         }
-        
+        const categoryIcon = isVideo ? '<i class="fab fa-youtube"></i>' : (isPlaylist ? '<i class="fas fa-list"></i>' : '<i class="fas fa-pen-fancy"></i>');
+        const categoryText = isVideo ? 'Vídeo' : (isPlaylist ? 'Playlist' : 'Artigo');
         card.innerHTML = `
           ${mediaHtml}
           <div class="post-content">
-            <span class="post-category"><i class="fas ${hasVideo ? 'fa-video' : 'fa-pen-fancy'}"></i> ${hasVideo ? 'Vídeo' : 'Artigo'}</span>
+            <span class="post-category">${categoryIcon} ${categoryText}</span>
             <h3 class="post-title">${escapeHtml(post.title)}</h3>
-            <div class="post-meta">
-              <span><i class="far fa-calendar-alt"></i> ${escapeHtml(postDate)}</span>
-              <span><i class="far fa-clock"></i> ${Math.ceil(post.content.length / 500)} min leitura</span>
-            </div>
-            <p class="post-summary">${escapeHtml(summary)}</p>
+            <div class="post-meta"><span><i class="far fa-calendar-alt"></i> ${escapeHtml(date)}</span><span><i class="far fa-clock"></i> ${Math.ceil((post.content?.length||100)/500)} min leitura</span></div>
+            <p class="post-summary">${escapeHtml(truncate(post.content, 180))}</p>
             <a href="#" class="read-more" data-id="${post.id}">Ler completo <i class="fas fa-arrow-right"></i></a>
           </div>
         `;
-        
         container.appendChild(card);
       }
-      
-      document.getElementById('postCount').innerText = allPosts.length;
-      
-      // Add click handlers
-      document.querySelectorAll('.read-more').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const postId = link.getAttribute('data-id');
-          const post = allPosts.find(p => p.id === postId);
-          if (post) showFullPostModal(post);
-        });
-      });
-      
-      document.querySelectorAll('.post-card').forEach((card, idx) => {
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.read-more')) return;
-          const post = filteredPosts[idx];
-          if (post) showFullPostModal(post);
-        });
-      });
+      document.querySelectorAll('.read-more').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); const p = allPosts.find(p => p.id === link.dataset.id); if(p) showFullModal(p); }));
+      document.querySelectorAll('.post-card').forEach((card, idx) => { card.addEventListener('click', (e) => { if(e.target.closest('.read-more')) return; const p = filtered[idx]; if(p) showFullModal(p); }); });
     }
 
-    // Load posts from Firebase
-    function loadPosts() {
-      const container = document.getElementById('postsContainer');
-      container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Carregando conteúdo...</div>';
-      
-      postsRef.orderByChild('createdAt').once('value', (snapshot) => {
-        const postsData = snapshot.val();
-        if (!postsData) {
-          allPosts = [];
-          renderPosts();
-          return;
+    dbRef.on('value', (snap) => {
+      const data = snap.val();
+      if (!data) { allPosts = []; renderPosts(); return; }
+      allPosts = Object.entries(data).map(([id, post]) => {
+        let type = post.type;
+        if (!type) {
+          if (post.videoUrl && post.videoUrl.trim()) type = 'video';
+          else if (post.playlistUrl && post.playlistUrl.trim()) type = 'playlist';
+          else type = 'text';
         }
-        
-        allPosts = Object.keys(postsData).map(key => ({
-          id: key,
-          ...postsData[key]
-        })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-        
-        renderPosts();
-      }).catch(error => {
-        console.error(error);
-        container.innerHTML = `<div class="no-posts"><i class="fas fa-exclamation-triangle"></i><br>Erro ao carregar posts: ${escapeHtml(error.message)}</div>`;
-      });
-    }
-
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.getAttribute('data-filter');
-        renderPosts();
-      });
-    });
-
-    document.getElementById('showAllBtn')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
-      currentFilter = 'all';
+        const videoEmbed = type === 'video' ? getYouTubeEmbedUrl(post.videoUrl) : null;
+        const playlistEmbed = type === 'playlist' ? getPlaylistEmbedUrl(post.playlistUrl) : null;
+        return { id, ...post, type, videoEmbedUrl: videoEmbed, playlistEmbedUrl: playlistEmbed };
+      }).sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
       renderPosts();
     });
 
-    loadPosts();
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderPosts();
+    }));
+    document.getElementById('showAllBtn')?.addEventListener('click', (e) => { e.preventDefault(); document.querySelector('.filter-btn[data-filter="all"]').click(); });
   </script>
 </body>
 </html>
